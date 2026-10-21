@@ -3,15 +3,15 @@
 **Question:** Do additional graph features and small GNNs improve on a strong
 tabular baseline, and does the model remain reliable over time?
 
-**Status: Stage 1 reviewed and validated; Stage 2 baselines complete.**
-The dataset, temporal splits, weighted tabular models and five-seed validation
-results are implemented. Paused before Stage 3. Final test results, new graph
-features, GNNs and monitoring remain future review stages.
+**Status: Stages 1–3 complete; paused before Stage 4 (GNNs).**
+The dataset, temporal splits, weighted tabular baselines and additional graph
+features have real five-seed validation results. Final test evaluation and
+over-time monitoring remain future review stages.
 
 This is an offline benchmark for an Associate Data Scientist portfolio. It is
 not a real-time fraud service or a claim of deployment experience.
 
-## Reproduce stages 1–2
+## Reproduce stages 1–3
 
 Python 3.10+; the completed run used Python 3.12.14. No GPU is required.
 From the repository root:
@@ -62,6 +62,27 @@ not transitive locks; exact floating-point results can vary across dependency
 versions and hardware. CI tests correctness rather than cross-platform bitwise
 identity.
 
+Run Stage 3 from one command:
+
+```bash
+make stage3
+# Equivalent training CLI:
+python -m src.graph_train --config configs/stage3.yaml --download
+```
+
+This uses the committed Stage 2 selection/run metadata; Stage 2 binary artifacts
+are not required. It rebuilds snapshot-local features and performs 20 downstream
+XGBoost fits (four variants × five seeds), using the previously selected Stage 2
+hyperparameters unchanged. It also fits 24 deterministic forward-chained score
+helpers and logs one cold-start fallback. Neither model hyperparameters nor
+helper settings are retuned on Stage 3 results. `requirements-stage3-tested.txt`
+records the observed direct versions.
+
+All models, feature arrays and exact score arrays live under ignored
+`artifacts/`. Committed per-fit logs, feature/cutoff audits, representative score
+CSV, tables and plots retain the experiment evidence. Reproduction regenerates
+the binary artifacts. Test graph rows remain unavailable (NaN) during this stage.
+
 The raw feature CSV is about 690 MB; allow space for raw files, temporary ZIPs
 and parsing memory. Raw data is excluded from version control.
 The CSV layout is the same as the original Kaggle release. Kaggle downloads can
@@ -108,9 +129,7 @@ used as a replacement decision threshold.
 | XGBoost | local | 94 | 5 | 0.9829 ± 0.0005 | 0.9611 ± 0.0169 | 0.9176 ± 0.0176 | 0.9386 ± 0.0013 |
 
 Validation selects both candidates and thresholds, so these development scores
-are optimistic. Test performance stays unevaluated until Stage 5. No GNN or new
-NetworkX graph feature has been tested yet, so this is not evidence that those
-methods do or do not improve the tree baseline.
+are optimistic. Test performance stays unevaluated until Stage 5. Additional graph features are compared in Stage 3 below; no GNN has been trained yet.
 
 ![Validation PR and threshold diagnostics](results/stage2/figures/validation_diagnostics.png)
 
@@ -119,6 +138,53 @@ See [the full Stage 2 report](results/stage2/REPORT.md) for the no-time ablation
 [candidate trials](results/stage2/tuning_candidates.csv),
 [independent validation](results/stage2/independent_validation.json), and
 [the Stage 1 correctness review](docs/stage1_review.md).
+
+## Stage 3 graph comparison — validation only
+
+Mean ± sample std over the same five seeds; each model has a validation-only
+frozen threshold. The fresh control reproduces Stage 2 inputs, validation
+scores, metrics and thresholds exactly for all five seeds.
+
+| Model | Features | AP (PR-AUC) | Illicit F1 |
+|---|---:|---:|---:|
+| XGBoost control | 166 | 0.98535 ± 0.00180 | 0.95235 ± 0.00645 |
+| XGBoost + structure | 172 | 0.98599 ± 0.00139 | 0.95362 ± 0.00607 |
+| XGBoost + structure + neighbor scores | 174 | 0.98532 ± 0.00137 | 0.95118 ± 0.00512 |
+| XGBoost structure only | 6 | 0.25526 ± 0.00205 | 0.38044 ± 0.00380 |
+
+Structure adds a small validation AP difference of +0.000647 ± 0.000596 across paired seeds (4/5 positive). The combined structure/neighbor-score variant differs from control by -0.000028 ± 0.000682 (2/5 positive). The simple neighbor scores add no validation gain in this experiment. The GNN and final test comparisons remain pending.
+
+![Graph feature comparison and paired validation AP differences](results/stage3/figures/graph_comparison.png)
+
+The six structural inputs are degree, in-degree, out-degree, directed PageRank,
+snapshot-size-adjusted PageRank and clustering on an undirected projection.
+Every calculation uses one observed completed snapshot. Validation graph
+statistics are deterministic inference transforms on its unlabeled topology;
+no model, scaler, class weight, histogram bin or graph normalization is fitted
+across validation/test periods. No test graph statistics are computed here.
+
+The two neighbor-score inputs are mean/max over unique incoming/outgoing
+neighbors. A fixed balanced LogReg on local numeric inputs produces each
+training step's scores using **earlier training steps only**. Steps 25–34 use a
+single frozen score helper trained on steps 1–24. Unknown nodes receive scores
+and remain in aggregation. Raw neighbor labels are excluded from model inputs:
+validation nodes have zero neighbors whose labels are exposed by the training
+period. The audit records this availability gap explicitly.
+
+The score helper uses no time input, fits its scaler only on eligible known
+training rows, and is not tuned on validation. Insufficient-history cases use a
+configured fixed score of 0.5; isolates use zero for empty neighbor aggregates.
+Past labels are assumed available by the next time step because actual label
+availability timestamps are absent. Changing helper training sizes and absent
+label-delay information limit the operational interpretation.
+
+See [the Stage 3 report](results/stage3/REPORT.md),
+[paired per-seed lift](results/stage3/paired_lift.csv),
+[feature and score-helper audit](results/stage3/graph_feature_manifest.json),
+[independent validation](results/stage3/independent_validation.json), and
+[five interview findings](docs/stage3_findings.md).
+The representative seed-0 gain importances use training trees only; they are
+recorded as split-gain diagnostics, with no causal attribution claim.
 
 ## Fixed temporal protocol
 
@@ -222,8 +288,8 @@ synthetic fixtures; dataset findings use only the downloaded real release.
 1. **Data + splits + tests:** reviewed and validated; timestamp precision guard fixed.
 2. **Baselines:** complete; weighted LogReg/XGBoost, local/all and time ablations,
    five-seed validation results and frozen thresholds. Paused for review.
-3. **Graph features:** NetworkX degree, PageRank, clustering and defensible
-   neighbor statistics; evaluate incremental validation lift.
+3. **Graph features:** complete; NetworkX structure, forward-chained neighbor
+   scores, paired five-seed comparisons and structure-only ablation. Paused for review.
 4. **GNNs:** small GCN then GraphSAGE; weighted supervised loss, training-period
    message passing, validation early stopping, five seeds.
 5. **Evaluation:** fixed validation-selected thresholds; AP primary, trapezoidal
@@ -235,7 +301,7 @@ synthetic fixtures; dataset findings use only the downloaded real release.
    decay. Propose triggers with training/validation justification and label-delay
    assumptions. Emit plots, JSON/CSV and five final interview findings.
 
-Stages 3–6 are not implemented in this checkpoint. Final test and monitoring
+Stages 4–6 are not implemented in this checkpoint. Final test and monitoring
 claims will be added only after their actual runs. Explainability,
 communities, semi-supervised experiments and a dashboard follow the core
 comparison if time permits.
@@ -243,7 +309,8 @@ comparison if time permits.
 ## Explicit protocol choices
 
 `configs/default.yaml` preserves the historical Stage 1 checkpoint, which had no
-modeling policy. `configs/stage2.yaml` contains the active baseline protocol.
+modeling policy. `configs/stage2.yaml` contains the baseline protocol; `configs/stage3.yaml`
+preserves its split/metrics and fixes the additional graph experiment.
 After the choice form returned no selections, Stage 2 used explicit defaults:
 
 - Primary inputs: 94 local / 166 all features, including time; 93/165 run as an
@@ -281,3 +348,6 @@ dataset with no real-time deployment, production feedback, or analyst review.
 
 - [scikit-learn average precision definition](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html)
 - [XGBoost parameters](https://xgboost.readthedocs.io/en/stable/parameter.html)
+
+- [NetworkX PageRank](https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.link_analysis.pagerank_alg.pagerank.html)
+- [NetworkX clustering](https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.cluster.clustering.html)

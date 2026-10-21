@@ -1,0 +1,80 @@
+{
+  "fit_cutoff": 23,
+  "fit_labeled_nodes": 22480,
+  "fit_illicit_nodes": 2082,
+  "fit_input_sha256": "d4c45e70bfb87ca3f5978da4cfbdc0ad99e2196728d23140303c35819df3e036",
+  "cold_start": false,
+  "config": {
+    "model": "logreg",
+    "input_features": "local_without_time",
+    "seed": 0,
+    "cold_start_score": 0.5,
+    "parameters": {
+      "C": 1.0,
+      "solver": "lbfgs",
+      "class_weight": "balanced",
+      "max_iter": 3000,
+      "tol": 1e-05
+    }
+  },
+  "status": "completed",
+  "warnings": [],
+  "scaler_samples_seen": 22480,
+  "class_weights": {
+    "0": 0.5510344151387391,
+    "1": 5.398655139289145
+  },
+  "model_artifact": {
+    "path": "artifacts/stage3/20261021T171806Z_79a733a2/feature_build/score_models/prefix_23.joblib",
+    "sha256": "a4f9f6f0d2d17acb665e1c44c4a8a0f6f0cfb0ca43cf6ab6d1051cddb1609262"
+  },
+  "batch_id": "20261021T171806Z_79a733a2",
+  "seed": 0,
+  "metrics": null,
+  "metrics_note": "No held-out labels used to train/tune score helpers.",
+  "provenance": {
+    "versions": {
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "pandas": "2.2.3",
+      "matplotlib": "3.10.8",
+      "PyYAML": "6.0.3",
+      "pytest": "8.4.2",
+      "scikit-learn": "1.7.2",
+      "xgboost": null,
+      "xgboost-cpu": "3.4.1",
+      "joblib": "1.5.3",
+      "networkx": "3.7",
+      "scipy": "1.17.0",
+      "torch": null,
+      "torch-geometric": null
+    },
+    "source_files_sha256": {
+      "__init__.py": "2842156607177ab538e89713f5c5e63cbd0d942c1424190a2c675a0781984356",
+      "data.py": "6482ea8b17368f71a5194476af4169865a16bb07c946d2905451bf4cc076abe9",
+      "eda.py": "b5bd12a42886021136861d6459936638411cc4a4a20c675e05525cb5a5e37415",
+      "evaluate.py": "93d0aba2cdff36f444ca6fed5a2a4e95822b6a13f074d4c37effae7d96193a09",
+      "features.py": "f83b4800e5037e54a43912f3629cf046abeeec4fe253b94edb7fd6d08062b8c1",
+      "graph_reporting.py": "5f7d68ed00f7feddea6a2e436f33e0b6cee02b93ef922de65c23b8fdd8f4e992",
+      "graph_train.py": "10d877a0fd526dd6d1f0c457593dc7414be13395e787278e0ff2a299d48a3bc4",
+      "models.py": "ca5dad975d7007ab6b04d872328261f3674f439d7a75e33c81b97a29ebadb6dd",
+      "reporting.py": "4a5ad8b9bc56ab0b3abf0cfcfaae4dc3ef493a580f080a88e64292e1604ae220",
+      "train.py": "ecbcb3b78ee1b48f3bb1c76c4e4d29af6024125b01e6253aa63966550364d705"
+    },
+    "input_files_sha256": {
+      "elliptic_txs_features.csv": "fd7f83573443c9e302e371d3f110e3b6224160f5d1ed8a287757936127800ff0",
+      "elliptic_txs_edgelist.csv": "a35053ba68a98e4382cae2ba65b9d9e36b23b6439e02dff084971b1b72a5156e",
+      "elliptic_txs_classes.csv": "93e2e7b2405c735ba752bf6ba06b947561deddd1f5a8fc91e46f6a4c0e439493"
+    },
+    "stage2_reference_files": {
+      "selection_record": {
+        "path": "results/stage2/selection.json",
+        "sha256": "f2685e9292dcdae4fd7ea9bf8b98275676803301dc2e49fdbe201b9f43174721"
+      },
+      "baseline_run_manifest": {
+        "path": "results/stage2/latest_run.json",
+        "sha256": "e3bf4a9158f1731d2847ef93fb76d4d08034322292358e9ac126353d023fc46d"
+      }
+    }
+  }
+}

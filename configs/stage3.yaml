@@ -1,0 +1,45 @@
+project: elliptic-fraud
+stage: 3
+data:
+  raw_dir: data/elliptic/raw
+  require_full_dataset: true
+split:
+  train: [1, 24]
+  validation: [25, 34]
+  test: [35, 49]
+experiment:
+  seeds: [0, 1, 2, 3, 4]
+  representative_seed: 0
+  primary_metric: average_precision
+  threshold_objective: max_f1
+  threshold_tie_break: highest_threshold
+  graph_availability: completed_snapshot
+  evaluate_test: false
+  variants: [all_control, all_structure, all_graph, structure_only]
+  # Fixed from Stage 2 before seeing any Stage 3 result; no new tuning budget.
+  selection_record: results/stage2/selection.json
+  baseline_run_manifest: results/stage2/latest_run.json
+  fixed_candidate_index: 1
+graph:
+  max_time_step: 34
+  pagerank_alpha: 0.85
+  pagerank_tolerance: 0.0000000001
+  pagerank_max_iter: 1000
+  clustering: undirected_projection
+  neighbor_direction: predecessors_union_successors
+  no_neighbor_score: 0.0
+risk_model:
+  model: logreg
+  input_features: local_without_time
+  seed: 0
+  cold_start_score: 0.5
+  parameters:
+    C: 1.0
+    solver: lbfgs
+    class_weight: balanced
+    max_iter: 3000
+    tol: 0.00001
+runtime:
+  thread_limit: 4
+output_dir: results/stage3
+artifact_dir: artifacts/stage3

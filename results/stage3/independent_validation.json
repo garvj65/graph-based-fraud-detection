@@ -1,0 +1,28 @@
+{
+  "batch_id": "20261021T171806Z_79a733a2",
+  "status": "passed",
+  "input_and_source_hashes_verified": true,
+  "graph_degree_and_neighbor_aggregates_independently_verified": true,
+  "pagerank_normalized_within_each_snapshot": true,
+  "helper_models_verified": 24,
+  "helper_cold_starts_verified": 1,
+  "helper_scalers_and_fit_cutoffs_verified": true,
+  "classifier_models_reloaded_with_identical_scores": 20,
+  "ap_and_max_f1_thresholds_independently_recomputed": true,
+  "paired_seed_deltas_and_sample_stds_verified": true,
+  "stage2_control_identical_for_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "raw_train_label_neighbor_coverage_on_validation": 0,
+  "test_graph_features_computed": false,
+  "test_model_performance_evaluated": false,
+  "local_progress_journals_reconciled_from_verified_completed_records": [
+    "prefix_13.json",
+    "prefix_20.json"
+  ],
+  "model_or_metric_changes_during_reconciliation": false
+}

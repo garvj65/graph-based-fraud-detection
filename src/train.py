@@ -111,7 +111,7 @@ def fit_run(
     record: dict[str, Any] = {
         "run_id": run_id,
         "batch_id": batch_id,
-        "stage": 2,
+        "stage": config["stage"],
         "status": "running",
         "model": model_name,
         "feature_group": group,

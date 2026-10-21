@@ -360,6 +360,8 @@ def environment_versions() -> dict[str, str | None]:
         "xgboost",
         "xgboost-cpu",
         "joblib",
+        "networkx",
+        "scipy",
         "torch",
         "torch-geometric",
     ):
