@@ -3,15 +3,15 @@
 **Question:** Do additional graph features and small GNNs improve on a strong
 tabular baseline, and does the model remain reliable over time?
 
-**Status: stage 1 complete; paused for review.** Real data has been downloaded,
-audited and split. No classifier has been trained. Model comparisons, monitoring
-performance, lift, seed variance and interview conclusions about model quality
-are deliberately absent until measured in the later stages.
+**Status: Stage 1 reviewed and validated; Stage 2 baselines complete.**
+The dataset, temporal splits, weighted tabular models and five-seed validation
+results are implemented. Paused before Stage 3. Final test results, new graph
+features, GNNs and monitoring remain future review stages.
 
 This is an offline benchmark for an Associate Data Scientist portfolio. It is
 not a real-time fraud service or a claim of deployment experience.
 
-## Reproduce stage 1
+## Reproduce stages 1–2
 
 Python 3.10+; the completed run used Python 3.12.14. No GPU is required.
 From the repository root:
@@ -32,8 +32,38 @@ python -m pytest -q
 python -m src.data --config configs/default.yaml --download
 ```
 
+Run the complete baseline experiment (tests, optional data acquisition, then
+candidate selection and five-seed replications):
+
+```bash
+make stage2
+# Equivalent training CLI:
+python -m src.train --config configs/stage2.yaml --download
+# A smaller run; its summary explicitly shows fewer than five seeds:
+python -m src.train --model xgboost --seed 0 --output-dir results/stage2_seed0
+```
+
+The full default experiment performs 56 fits: 24 tuning trials plus 32 new
+replications, reusing eight selected seed-0 tuning fits for 40 selected seed
+results. Logistic regression uses balanced class weights and a training-only
+StandardScaler; XGBoost uses a training-only positive-class weight ratio and
+600 histogram-based trees, with no validation data passed to estimator fitting.
+Three predeclared candidates are compared per family/feature variant on fixed
+seed 0; the winning candidate is frozen for all five seeds. No best-seed choice,
+SMOTE, random temporal split, or train+validation refit is performed.
+
+Models and exact validation score arrays are saved under ignored `artifacts/`;
+committed run logs contain their hashes, parameters, seeds, versions and frozen
+thresholds. Run the command to regenerate those binaries. The representative
+seed-0 validation score evidence is committed as compressed CSV; use pandas
+`read_csv(..., float_precision="round_trip")` when reproducing threshold ties.
+`requirements-stage2-tested.txt` records the observed direct versions. These are
+not transitive locks; exact floating-point results can vary across dependency
+versions and hardware. CI tests correctness rather than cross-platform bitwise
+identity.
+
 The raw feature CSV is about 690 MB; allow space for raw files, temporary ZIPs
-and parsing memory. Raw data is excluded from version control and this archive.
+and parsing memory. Raw data is excluded from version control.
 The CSV layout is the same as the original Kaggle release. Kaggle downloads can
 be supplied with:
 
@@ -60,6 +90,35 @@ GitHub Actions is configured for Python 3.10 and 3.12, using small synthetic tes
 fixtures without a network/data download. Consult the repository's
 [Actions tab](https://github.com/garvj65/graph-based-fraud-detection/actions)
 for hosted CI status; the local verification is saved with this checkpoint.
+
+## Stage 2 baseline comparison — validation only
+
+**Steps 25–34; known labels only. These are not test results.** Mean ± sample
+standard deviation over seeds 0–4. AP is sklearn average precision; trapezoidal
+PR-AUC is recorded separately in the CSV. Precision, recall and F1 use each
+seed's validation-selected maximum-F1 threshold, with higher thresholds winning
+ties. Individual thresholds are frozen in run JSONs; their summary mean is not
+used as a replacement decision threshold.
+
+| Model | Inputs | Features | Seeds | AP (PR-AUC) | Precision | Recall | F1 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| LogReg | all | 166 | 5 | 0.6115 ± 0.0000 | 0.6327 ± 0.0000 | 0.8053 ± 0.0000 | 0.7087 ± 0.0000 |
+| LogReg | local | 94 | 5 | 0.5944 ± 0.0000 | 0.6730 ± 0.0000 | 0.7353 ± 0.0000 | 0.7028 ± 0.0000 |
+| XGBoost | all | 166 | 5 | 0.9853 ± 0.0018 | 0.9533 ± 0.0109 | 0.9514 ± 0.0046 | 0.9523 ± 0.0065 |
+| XGBoost | local | 94 | 5 | 0.9829 ± 0.0005 | 0.9611 ± 0.0169 | 0.9176 ± 0.0176 | 0.9386 ± 0.0013 |
+
+Validation selects both candidates and thresholds, so these development scores
+are optimistic. Test performance stays unevaluated until Stage 5. No GNN or new
+NetworkX graph feature has been tested yet, so this is not evidence that those
+methods do or do not improve the tree baseline.
+
+![Validation PR and threshold diagnostics](results/stage2/figures/validation_diagnostics.png)
+
+See [the full Stage 2 report](results/stage2/REPORT.md) for the no-time ablation,
+[per-seed metrics](results/stage2/validation_per_seed.csv),
+[candidate trials](results/stage2/tuning_candidates.csv),
+[independent validation](results/stage2/independent_validation.json), and
+[the Stage 1 correctness review](docs/stage1_review.md).
 
 ## Fixed temporal protocol
 
@@ -88,7 +147,8 @@ The published 94 local features **include the time step**. The CSV therefore
 contains ID, time, 93 local numeric features, and 72 aggregate numeric features.
 PyG returns 165 predictors. The project stores time separately and supports both
 93/165-feature and 94/166-feature matrices, with an explicit `include_time`
-argument. The primary predictor policy remains undecided pending review.
+argument. Stage 2 follows the original 94/166 convention, including time, and
+also runs the 93/165 no-time ablation.
 
 The all-feature tree baseline already includes supplied graph-derived neighbor
 aggregates. It is a tabular model, but cannot be described as having no graph
@@ -159,15 +219,15 @@ synthetic fixtures; dataset findings use only the downloaded real release.
 
 ## Remaining review stages
 
-1. **Data + splits + tests:** complete, awaiting review.
-2. **Baselines:** weighted logistic regression and XGBoost on local/all inputs;
-   train-only preprocessing and five-seed run logs.
+1. **Data + splits + tests:** reviewed and validated; timestamp precision guard fixed.
+2. **Baselines:** complete; weighted LogReg/XGBoost, local/all and time ablations,
+   five-seed validation results and frozen thresholds. Paused for review.
 3. **Graph features:** NetworkX degree, PageRank, clustering and defensible
    neighbor statistics; evaluate incremental validation lift.
 4. **GNNs:** small GCN then GraphSAGE; weighted supervised loss, training-period
    message passing, validation early stopping, five seeds.
-5. **Evaluation:** fixed validation-selected thresholds; AP/PR-AUC definition to
-   confirm; precision/recall/F1, confusion matrix, top-k and secondary ROC-AUC;
+5. **Evaluation:** fixed validation-selected thresholds; AP primary, trapezoidal
+   PR-AUC separate; precision/recall/F1, confusion matrix, top-k and secondary ROC-AUC;
    mean ± sample std, paired seed differences and feature/structure ablations.
 6. **Monitoring:** frozen-model per-step test metrics, alert rates and score
    distributions; train-reference PSI/KS and top-10 feature drift. Investigate
@@ -175,25 +235,28 @@ synthetic fixtures; dataset findings use only the downloaded real release.
    decay. Propose triggers with training/validation justification and label-delay
    assumptions. Emit plots, JSON/CSV and five final interview findings.
 
-Stages 2–6 are not implemented in this checkpoint. No model results table or
-monitoring claims will be added before the corresponding runs. Explainability,
+Stages 3–6 are not implemented in this checkpoint. Final test and monitoring
+claims will be added only after their actual runs. Explainability,
 communities, semi-supervised experiments and a dashboard follow the core
 comparison if time permits.
 
-## Decisions pending before modeling
+## Explicit protocol choices
 
-The config retains `null` for decisions that have not been answered:
+`configs/default.yaml` preserves the historical Stage 1 checkpoint, which had no
+modeling policy. `configs/stage2.yaml` contains the active baseline protocol.
+After the choice form returned no selections, Stage 2 used explicit defaults:
 
-- Include time as a predictor? Proposed main run: exclude it (93/165 numeric
-  predictors); optionally compare 94/166 as a labeled ablation.
-- Information availability? Proposed main run: completed snapshots, with
-  forward-neighbor and label-availability caveats.
-- PR metric definition? Proposed: sklearn average precision, labeled
-  **AP (PR-AUC)** consistently, rather than silently mixing integration methods.
-- Threshold objective? Choose validation F1 or a precision/alert-budget policy;
-  agree on tie breaking and freeze before test.
-- Top-k budget and universe? Define an alert budget per step and distinguish
-  labeled-only evaluation from all-node operational review volume.
+- Primary inputs: 94 local / 166 all features, including time; 93/165 run as an
+  ablation. The primary convention is not changed after seeing the ablation.
+- Availability: completed snapshots; supplied forward-neighbor and label-delay
+  limitations remain explicit. This is not a transaction-arrival replay.
+- Selection metric: average precision, labeled **AP (PR-AUC)**; trapezoidal
+  PR-AUC is reported separately.
+- Threshold: maximize validation illicit F1; tie within numerical tolerance goes
+  to the higher threshold; prediction rule is `score >= threshold`.
+- Test performance: deferred until Stage 5. No test score was consulted here.
+- Alert budget and operational top-k denominator: still pending. Unknown alerts
+  cannot be called false positives or true positives without additional labels.
 
 ## Limitations
 
@@ -203,7 +266,11 @@ entity-derived heuristic classification, not a proof that a transaction is a
 crime. Features are anonymized and partly retrospective, constraining
 explanation and strict causal replay. Temporal label/prevalence shift can affect
 PR metrics independently of model deterioration. Five seeds quantify training
-variability, not uncertainty over unseen time periods. This is one historical
+variability, not uncertainty over unseen time periods. LBFGS is deterministic,
+so LogReg's repeated seeds provide no extra independent evidence. The candidate
+grid is small and not an exhaustive tuning exercise; the chosen LogReg C lies
+at its upper boundary. Upstream feature preprocessing and strict as-of
+availability cannot be independently reconstructed from the release. This is one historical
 dataset with no real-time deployment, production feedback, or analyst review.
 
 ## Primary references
@@ -211,3 +278,6 @@ dataset with no real-time deployment, production feedback, or analyst review.
 - [Original paper and dataset description](https://arxiv.org/abs/1908.02591)
 - [PyG EllipticBitcoinDataset implementation](https://pytorch-geometric.readthedocs.io/en/latest/_modules/torch_geometric/datasets/elliptic.html)
 - [Original Kaggle release](https://www.kaggle.com/datasets/ellipticco/elliptic-data-set)
+
+- [scikit-learn average precision definition](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html)
+- [XGBoost parameters](https://xgboost.readthedocs.io/en/stable/parameter.html)

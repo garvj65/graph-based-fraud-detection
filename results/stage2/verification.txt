@@ -1,0 +1,11 @@
+Local verification before the full real-data experiment:
+
+python -m pytest -q
+61 passed in 4.56s
+
+python -m ruff check src tests
+All checks passed!
+
+Independent real-data validation: see independent_validation.json.
+56 trial logs checked; 40 selected models reloaded with identical validation scores.
+No test model performance evaluated.

@@ -1,0 +1,319 @@
+{
+  "run_id": "20261021T162057Z_0930f969_logreg_local_no_time_c1_s0",
+  "batch_id": "20261021T162057Z_0930f969",
+  "stage": 2,
+  "status": "completed",
+  "model": "logreg",
+  "feature_group": "local",
+  "include_time": false,
+  "n_features": 93,
+  "feature_names": [
+    "local_001",
+    "local_002",
+    "local_003",
+    "local_004",
+    "local_005",
+    "local_006",
+    "local_007",
+    "local_008",
+    "local_009",
+    "local_010",
+    "local_011",
+    "local_012",
+    "local_013",
+    "local_014",
+    "local_015",
+    "local_016",
+    "local_017",
+    "local_018",
+    "local_019",
+    "local_020",
+    "local_021",
+    "local_022",
+    "local_023",
+    "local_024",
+    "local_025",
+    "local_026",
+    "local_027",
+    "local_028",
+    "local_029",
+    "local_030",
+    "local_031",
+    "local_032",
+    "local_033",
+    "local_034",
+    "local_035",
+    "local_036",
+    "local_037",
+    "local_038",
+    "local_039",
+    "local_040",
+    "local_041",
+    "local_042",
+    "local_043",
+    "local_044",
+    "local_045",
+    "local_046",
+    "local_047",
+    "local_048",
+    "local_049",
+    "local_050",
+    "local_051",
+    "local_052",
+    "local_053",
+    "local_054",
+    "local_055",
+    "local_056",
+    "local_057",
+    "local_058",
+    "local_059",
+    "local_060",
+    "local_061",
+    "local_062",
+    "local_063",
+    "local_064",
+    "local_065",
+    "local_066",
+    "local_067",
+    "local_068",
+    "local_069",
+    "local_070",
+    "local_071",
+    "local_072",
+    "local_073",
+    "local_074",
+    "local_075",
+    "local_076",
+    "local_077",
+    "local_078",
+    "local_079",
+    "local_080",
+    "local_081",
+    "local_082",
+    "local_083",
+    "local_084",
+    "local_085",
+    "local_086",
+    "local_087",
+    "local_088",
+    "local_089",
+    "local_090",
+    "local_091",
+    "local_092",
+    "local_093"
+  ],
+  "seed": 0,
+  "candidate_index": 1,
+  "phase": "tuning",
+  "parameters": {
+    "solver": "lbfgs",
+    "max_iter": 3000,
+    "tol": 1e-05,
+    "class_weight": "balanced",
+    "C": 1.0
+  },
+  "config": {
+    "project": "elliptic-fraud",
+    "stage": 2,
+    "data": {
+      "source": "csv",
+      "root": "data/elliptic",
+      "raw_dir": "data/elliptic/raw",
+      "require_full_dataset": true
+    },
+    "split": {
+      "train": [
+        1,
+        24
+      ],
+      "validation": [
+        25,
+        34
+      ],
+      "test": [
+        35,
+        49
+      ]
+    },
+    "experiment": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "tuning_seed": 0,
+      "representative_seed": 0,
+      "feature_groups": [
+        "local",
+        "all"
+      ],
+      "include_time_options": [
+        true,
+        false
+      ],
+      "primary_include_time": true,
+      "primary_metric": "average_precision",
+      "threshold_objective": "max_f1",
+      "threshold_tie_break": "highest_threshold",
+      "graph_availability": "completed_snapshot",
+      "evaluate_test": false,
+      "alert_budget_per_step": null,
+      "protocol_status": "explicit_defaults_after_unanswered_choice_form"
+    },
+    "models": {
+      "logreg": {
+        "common": {
+          "solver": "lbfgs",
+          "max_iter": 3000,
+          "tol": 1e-05,
+          "class_weight": "balanced"
+        },
+        "candidates": [
+          {
+            "C": 0.1
+          },
+          {
+            "C": 1.0
+          },
+          {
+            "C": 10.0
+          }
+        ]
+      },
+      "xgboost": {
+        "common": {
+          "objective": "binary:logistic",
+          "eval_metric": "logloss",
+          "tree_method": "hist",
+          "device": "cpu",
+          "n_jobs": 4,
+          "n_estimators": 600,
+          "learning_rate": 0.05,
+          "min_child_weight": 5,
+          "subsample": 0.8,
+          "colsample_bytree": 0.8,
+          "max_bin": 256,
+          "verbosity": 0
+        },
+        "candidates": [
+          {
+            "max_depth": 3,
+            "reg_lambda": 1.0
+          },
+          {
+            "max_depth": 5,
+            "reg_lambda": 5.0
+          },
+          {
+            "max_depth": 7,
+            "reg_lambda": 10.0
+          }
+        ]
+      }
+    },
+    "runtime": {
+      "thread_limit": 4
+    },
+    "output_dir": "results/stage2",
+    "artifact_dir": "artifacts/stage2"
+  },
+  "provenance": {
+    "versions": {
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "pandas": "2.2.3",
+      "matplotlib": "3.10.8",
+      "PyYAML": "6.0.3",
+      "pytest": "8.4.2",
+      "scikit-learn": "1.7.2",
+      "xgboost": null,
+      "xgboost-cpu": "3.4.1",
+      "joblib": "1.5.3",
+      "torch": null,
+      "torch-geometric": null
+    },
+    "source_files_sha256": {
+      "__init__.py": "2842156607177ab538e89713f5c5e63cbd0d942c1424190a2c675a0781984356",
+      "data.py": "e3f8f5cfbca6812b32839465bbf8c3a8d0124ba5bde2476c89e940a1ca9eed04",
+      "eda.py": "b5bd12a42886021136861d6459936638411cc4a4a20c675e05525cb5a5e37415",
+      "evaluate.py": "93d0aba2cdff36f444ca6fed5a2a4e95822b6a13f074d4c37effae7d96193a09",
+      "models.py": "ca5dad975d7007ab6b04d872328261f3674f439d7a75e33c81b97a29ebadb6dd",
+      "reporting.py": "4a5ad8b9bc56ab0b3abf0cfcfaae4dc3ef493a580f080a88e64292e1604ae220",
+      "train.py": "0533e43e924489bff6fdcb3a84e072fded7044961c35c8d0a1185173ab22c403"
+    },
+    "input_files_sha256": {
+      "elliptic_txs_features.csv": "fd7f83573443c9e302e371d3f110e3b6224160f5d1ed8a287757936127800ff0",
+      "elliptic_txs_edgelist.csv": "a35053ba68a98e4382cae2ba65b9d9e36b23b6439e02dff084971b1b72a5156e",
+      "elliptic_txs_classes.csv": "93e2e7b2405c735ba752bf6ba06b947561deddd1f5a8fc91e46f6a4c0e439493"
+    }
+  },
+  "fit_scope": "known labels in time steps 1\u201324 only",
+  "selection_scope": "known labels in time steps 25\u201334 only",
+  "test_evaluated": false,
+  "input_fingerprints": {
+    "train": "f900af68c9310663b245f82b6bec94f56bb560492ec894d7486ba630d3351b91",
+    "validation": "356abb1c66b6d1f50a2e26f64bc4a32431518a8f477582abf16dfe72823980b3"
+  },
+  "class_weights": {
+    "licit": 0.5518773086454388,
+    "illicit": 5.319062640829203,
+    "scale_pos_weight": 9.638125281658406
+  },
+  "preprocessing": {
+    "scaler": "StandardScaler",
+    "fit_scope": "labeled training rows only",
+    "n_samples_seen": 23606,
+    "mean_sha256": "e3aa640fa01a93ba854356a312efe2366050cb665a8725f52b7cb7febbb03ec4",
+    "scale_sha256": "41ede4ee807ea9d552778f3ecd2ac51a71775336fa6e245fae8a139d4c962376"
+  },
+  "warnings": [],
+  "fit_seconds": 0.5913220060001549,
+  "threshold": {
+    "value": 0.8827398994715346,
+    "objective": "max_illicit_f1",
+    "selection_split": "validation",
+    "tie_break": "highest_threshold",
+    "comparison": "score >= threshold",
+    "validation_f1_at_selection": 0.6850229453483522,
+    "validation_labeled_support": 6288,
+    "validation_scores_sha256": "eb379ba1d0481e7ad17af1f468615847e708e46264611e9a41c1f40d18020a82"
+  },
+  "validation_metrics": {
+    "average_precision": 0.5298685508802948,
+    "pr_auc_trapezoid": 0.530147821623531,
+    "precision": 0.7114384748700173,
+    "recall": 0.6604987932421561,
+    "f1": 0.6850229453483521,
+    "roc_auc": 0.8718789143883647,
+    "confusion_matrix": [
+      [
+        4712,
+        333
+      ],
+      [
+        422,
+        821
+      ]
+    ],
+    "support_labeled": 6288,
+    "support_illicit": 1243,
+    "support_licit": 5045,
+    "observed_illicit_rate_labeled": 0.19767811704834606,
+    "alert_count_labeled": 1154,
+    "alert_rate_labeled": 0.18352417302798982,
+    "mean_score_labeled": 0.35714676509527615,
+    "threshold": 0.8827398994715346
+  },
+  "artifacts": {
+    "model": {
+      "path": "artifacts/stage2/20261021T162057Z_0930f969/20261021T162057Z_0930f969_logreg_local_no_time_c1_s0/pipeline.joblib",
+      "sha256": "f17a7e1a0b29dfd3aac4f279aa09088a612684adc669aa9895a6ba2c313684c6"
+    },
+    "validation_predictions": {
+      "path": "artifacts/stage2/20261021T162057Z_0930f969/20261021T162057Z_0930f969_logreg_local_no_time_c1_s0/validation_predictions.npz",
+      "sha256": "401d0d78367e27a67e81d48279126c22592f35ccc9f701a7823576ceb15f0039"
+    }
+  }
+}

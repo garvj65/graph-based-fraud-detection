@@ -1,0 +1,13 @@
+{
+  "reviewed_commit": "d6ba98e806b2ea0f42c6dc2863ff1858c54d3b52",
+  "raw_input_hashes_match_stage1": true,
+  "independent_id_join_reproduces_split_counts": true,
+  "local_tests_passed": 61,
+  "local_test_verification": "python -m pytest -q: 61 passed in 4.56s",
+  "lint_verification": "python -m ruff check src tests: All checks passed!",
+  "review_findings_fixed": [
+    "Fractional timestamps no longer narrowed to float32 before integer validation."
+  ],
+  "test_model_performance_evaluated": false,
+  "validation_artifacts": "results/stage2/independent_validation.json"
+}

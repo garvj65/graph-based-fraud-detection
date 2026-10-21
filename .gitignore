@@ -7,3 +7,4 @@ data/
 *.pt
 *.npz
 .ipynb_checkpoints/
+artifacts/

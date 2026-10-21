@@ -1,0 +1,17 @@
+{
+  "batch_id": "20261021T162057Z_0930f969",
+  "status": "passed",
+  "raw_input_hashes_match": true,
+  "source_hashes_match": true,
+  "trial_records_independently_checked": 56,
+  "selected_models_reloaded_with_identical_scores": 40,
+  "all_validation_scores_in_steps": [
+    25,
+    34
+  ],
+  "all_validation_rows_known_labels": true,
+  "ap_and_max_f1_thresholds_recomputed_from_sorted_scores": true,
+  "artifact_sha256_verified": true,
+  "aggregate_means_and_sample_stds_verified": true,
+  "test_performance_evaluated": false
+}

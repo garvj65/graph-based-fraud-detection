@@ -1,0 +1,58 @@
+project: elliptic-fraud
+stage: 2
+data:
+  source: csv
+  root: data/elliptic
+  raw_dir: data/elliptic/raw
+  require_full_dataset: true
+split:
+  train: [1, 24]
+  validation: [25, 34]
+  test: [35, 49]
+experiment:
+  seeds: [0, 1, 2, 3, 4]
+  tuning_seed: 0
+  representative_seed: 0
+  feature_groups: [local, all]
+  include_time_options: [true, false]
+  primary_include_time: true
+  primary_metric: average_precision
+  threshold_objective: max_f1
+  threshold_tie_break: highest_threshold
+  graph_availability: completed_snapshot
+  evaluate_test: false
+  alert_budget_per_step: null
+  protocol_status: explicit_defaults_after_unanswered_choice_form
+models:
+  logreg:
+    common:
+      solver: lbfgs
+      max_iter: 3000
+      tol: 0.00001
+      class_weight: balanced
+    candidates:
+      - {C: 0.1}
+      - {C: 1.0}
+      - {C: 10.0}
+  xgboost:
+    common:
+      objective: binary:logistic
+      eval_metric: logloss
+      tree_method: hist
+      device: cpu
+      n_jobs: 4
+      n_estimators: 600
+      learning_rate: 0.05
+      min_child_weight: 5
+      subsample: 0.8
+      colsample_bytree: 0.8
+      max_bin: 256
+      verbosity: 0
+    candidates:
+      - {max_depth: 3, reg_lambda: 1.0}
+      - {max_depth: 5, reg_lambda: 5.0}
+      - {max_depth: 7, reg_lambda: 10.0}
+runtime:
+  thread_limit: 4
+output_dir: results/stage2
+artifact_dir: artifacts/stage2

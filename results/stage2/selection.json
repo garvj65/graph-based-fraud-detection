@@ -1,0 +1,22 @@
+{
+  "evaluation_split": "validation",
+  "time_steps": [
+    25,
+    34
+  ],
+  "test_evaluated": false,
+  "primary_metric": "average_precision",
+  "std_definition": "sample standard deviation across seeds, ddof=1",
+  "primary_include_time": true,
+  "selected_run_count": 40,
+  "tuning_run_count": 24,
+  "best_primary_tabular_variant": {
+    "model": "xgboost",
+    "feature_group": "all",
+    "include_time": true,
+    "n_features": 166,
+    "validation_mean_primary_metric": 0.9853475337437116,
+    "candidate_index": 1
+  },
+  "interpretation": "Validation was used for candidate and threshold selection. These validation metrics are optimistic selection diagnostics, not final test estimates. Seed std measures training variability on the same split, not uncertainty across future periods."
+}

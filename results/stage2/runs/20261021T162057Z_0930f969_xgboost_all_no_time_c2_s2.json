@@ -1,0 +1,397 @@
+{
+  "run_id": "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s2",
+  "batch_id": "20261021T162057Z_0930f969",
+  "stage": 2,
+  "status": "completed",
+  "model": "xgboost",
+  "feature_group": "all",
+  "include_time": false,
+  "n_features": 165,
+  "feature_names": [
+    "local_001",
+    "local_002",
+    "local_003",
+    "local_004",
+    "local_005",
+    "local_006",
+    "local_007",
+    "local_008",
+    "local_009",
+    "local_010",
+    "local_011",
+    "local_012",
+    "local_013",
+    "local_014",
+    "local_015",
+    "local_016",
+    "local_017",
+    "local_018",
+    "local_019",
+    "local_020",
+    "local_021",
+    "local_022",
+    "local_023",
+    "local_024",
+    "local_025",
+    "local_026",
+    "local_027",
+    "local_028",
+    "local_029",
+    "local_030",
+    "local_031",
+    "local_032",
+    "local_033",
+    "local_034",
+    "local_035",
+    "local_036",
+    "local_037",
+    "local_038",
+    "local_039",
+    "local_040",
+    "local_041",
+    "local_042",
+    "local_043",
+    "local_044",
+    "local_045",
+    "local_046",
+    "local_047",
+    "local_048",
+    "local_049",
+    "local_050",
+    "local_051",
+    "local_052",
+    "local_053",
+    "local_054",
+    "local_055",
+    "local_056",
+    "local_057",
+    "local_058",
+    "local_059",
+    "local_060",
+    "local_061",
+    "local_062",
+    "local_063",
+    "local_064",
+    "local_065",
+    "local_066",
+    "local_067",
+    "local_068",
+    "local_069",
+    "local_070",
+    "local_071",
+    "local_072",
+    "local_073",
+    "local_074",
+    "local_075",
+    "local_076",
+    "local_077",
+    "local_078",
+    "local_079",
+    "local_080",
+    "local_081",
+    "local_082",
+    "local_083",
+    "local_084",
+    "local_085",
+    "local_086",
+    "local_087",
+    "local_088",
+    "local_089",
+    "local_090",
+    "local_091",
+    "local_092",
+    "local_093",
+    "aggregate_001",
+    "aggregate_002",
+    "aggregate_003",
+    "aggregate_004",
+    "aggregate_005",
+    "aggregate_006",
+    "aggregate_007",
+    "aggregate_008",
+    "aggregate_009",
+    "aggregate_010",
+    "aggregate_011",
+    "aggregate_012",
+    "aggregate_013",
+    "aggregate_014",
+    "aggregate_015",
+    "aggregate_016",
+    "aggregate_017",
+    "aggregate_018",
+    "aggregate_019",
+    "aggregate_020",
+    "aggregate_021",
+    "aggregate_022",
+    "aggregate_023",
+    "aggregate_024",
+    "aggregate_025",
+    "aggregate_026",
+    "aggregate_027",
+    "aggregate_028",
+    "aggregate_029",
+    "aggregate_030",
+    "aggregate_031",
+    "aggregate_032",
+    "aggregate_033",
+    "aggregate_034",
+    "aggregate_035",
+    "aggregate_036",
+    "aggregate_037",
+    "aggregate_038",
+    "aggregate_039",
+    "aggregate_040",
+    "aggregate_041",
+    "aggregate_042",
+    "aggregate_043",
+    "aggregate_044",
+    "aggregate_045",
+    "aggregate_046",
+    "aggregate_047",
+    "aggregate_048",
+    "aggregate_049",
+    "aggregate_050",
+    "aggregate_051",
+    "aggregate_052",
+    "aggregate_053",
+    "aggregate_054",
+    "aggregate_055",
+    "aggregate_056",
+    "aggregate_057",
+    "aggregate_058",
+    "aggregate_059",
+    "aggregate_060",
+    "aggregate_061",
+    "aggregate_062",
+    "aggregate_063",
+    "aggregate_064",
+    "aggregate_065",
+    "aggregate_066",
+    "aggregate_067",
+    "aggregate_068",
+    "aggregate_069",
+    "aggregate_070",
+    "aggregate_071",
+    "aggregate_072"
+  ],
+  "seed": 2,
+  "candidate_index": 2,
+  "phase": "replication",
+  "parameters": {
+    "objective": "binary:logistic",
+    "eval_metric": "logloss",
+    "tree_method": "hist",
+    "device": "cpu",
+    "n_jobs": 4,
+    "n_estimators": 600,
+    "learning_rate": 0.05,
+    "min_child_weight": 5,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "max_bin": 256,
+    "verbosity": 0,
+    "max_depth": 7,
+    "reg_lambda": 10.0
+  },
+  "config": {
+    "project": "elliptic-fraud",
+    "stage": 2,
+    "data": {
+      "source": "csv",
+      "root": "data/elliptic",
+      "raw_dir": "data/elliptic/raw",
+      "require_full_dataset": true
+    },
+    "split": {
+      "train": [
+        1,
+        24
+      ],
+      "validation": [
+        25,
+        34
+      ],
+      "test": [
+        35,
+        49
+      ]
+    },
+    "experiment": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "tuning_seed": 0,
+      "representative_seed": 0,
+      "feature_groups": [
+        "local",
+        "all"
+      ],
+      "include_time_options": [
+        true,
+        false
+      ],
+      "primary_include_time": true,
+      "primary_metric": "average_precision",
+      "threshold_objective": "max_f1",
+      "threshold_tie_break": "highest_threshold",
+      "graph_availability": "completed_snapshot",
+      "evaluate_test": false,
+      "alert_budget_per_step": null,
+      "protocol_status": "explicit_defaults_after_unanswered_choice_form"
+    },
+    "models": {
+      "logreg": {
+        "common": {
+          "solver": "lbfgs",
+          "max_iter": 3000,
+          "tol": 1e-05,
+          "class_weight": "balanced"
+        },
+        "candidates": [
+          {
+            "C": 0.1
+          },
+          {
+            "C": 1.0
+          },
+          {
+            "C": 10.0
+          }
+        ]
+      },
+      "xgboost": {
+        "common": {
+          "objective": "binary:logistic",
+          "eval_metric": "logloss",
+          "tree_method": "hist",
+          "device": "cpu",
+          "n_jobs": 4,
+          "n_estimators": 600,
+          "learning_rate": 0.05,
+          "min_child_weight": 5,
+          "subsample": 0.8,
+          "colsample_bytree": 0.8,
+          "max_bin": 256,
+          "verbosity": 0
+        },
+        "candidates": [
+          {
+            "max_depth": 3,
+            "reg_lambda": 1.0
+          },
+          {
+            "max_depth": 5,
+            "reg_lambda": 5.0
+          },
+          {
+            "max_depth": 7,
+            "reg_lambda": 10.0
+          }
+        ]
+      }
+    },
+    "runtime": {
+      "thread_limit": 4
+    },
+    "output_dir": "results/stage2",
+    "artifact_dir": "artifacts/stage2"
+  },
+  "provenance": {
+    "versions": {
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "pandas": "2.2.3",
+      "matplotlib": "3.10.8",
+      "PyYAML": "6.0.3",
+      "pytest": "8.4.2",
+      "scikit-learn": "1.7.2",
+      "xgboost": null,
+      "xgboost-cpu": "3.4.1",
+      "joblib": "1.5.3",
+      "torch": null,
+      "torch-geometric": null
+    },
+    "source_files_sha256": {
+      "__init__.py": "2842156607177ab538e89713f5c5e63cbd0d942c1424190a2c675a0781984356",
+      "data.py": "e3f8f5cfbca6812b32839465bbf8c3a8d0124ba5bde2476c89e940a1ca9eed04",
+      "eda.py": "b5bd12a42886021136861d6459936638411cc4a4a20c675e05525cb5a5e37415",
+      "evaluate.py": "93d0aba2cdff36f444ca6fed5a2a4e95822b6a13f074d4c37effae7d96193a09",
+      "models.py": "ca5dad975d7007ab6b04d872328261f3674f439d7a75e33c81b97a29ebadb6dd",
+      "reporting.py": "4a5ad8b9bc56ab0b3abf0cfcfaae4dc3ef493a580f080a88e64292e1604ae220",
+      "train.py": "0533e43e924489bff6fdcb3a84e072fded7044961c35c8d0a1185173ab22c403"
+    },
+    "input_files_sha256": {
+      "elliptic_txs_features.csv": "fd7f83573443c9e302e371d3f110e3b6224160f5d1ed8a287757936127800ff0",
+      "elliptic_txs_edgelist.csv": "a35053ba68a98e4382cae2ba65b9d9e36b23b6439e02dff084971b1b72a5156e",
+      "elliptic_txs_classes.csv": "93e2e7b2405c735ba752bf6ba06b947561deddd1f5a8fc91e46f6a4c0e439493"
+    }
+  },
+  "fit_scope": "known labels in time steps 1\u201324 only",
+  "selection_scope": "known labels in time steps 25\u201334 only",
+  "test_evaluated": false,
+  "input_fingerprints": {
+    "train": "2cf3b96b1c4b347541cd63bae245b27c6dd4a8325940da808b5265f3cbce9198",
+    "validation": "5d5940df613a5f213474826002acefc6979d590dff67b3d5d78ce677b13b32c8"
+  },
+  "class_weights": {
+    "licit": 0.5518773086454388,
+    "illicit": 5.319062640829203,
+    "scale_pos_weight": 9.638125281658406
+  },
+  "preprocessing": {
+    "scaler": null,
+    "histogram_fit_scope": "training only"
+  },
+  "warnings": [],
+  "fit_seconds": 6.549303838000014,
+  "threshold": {
+    "value": 0.4410238564014435,
+    "objective": "max_illicit_f1",
+    "selection_split": "validation",
+    "tie_break": "highest_threshold",
+    "comparison": "score >= threshold",
+    "validation_f1_at_selection": 0.9502407704654895,
+    "validation_labeled_support": 6288,
+    "validation_scores_sha256": "b6c8edb3896041321f98921b9032c1c0b8e4e1192376356e79d0babee92d424a"
+  },
+  "validation_metrics": {
+    "average_precision": 0.9848737013661634,
+    "pr_auc_trapezoid": 0.9848666571394802,
+    "precision": 0.9479583666933546,
+    "recall": 0.9525341914722446,
+    "f1": 0.9502407704654896,
+    "roc_auc": 0.9960803293288799,
+    "confusion_matrix": [
+      [
+        4980,
+        65
+      ],
+      [
+        59,
+        1184
+      ]
+    ],
+    "support_labeled": 6288,
+    "support_illicit": 1243,
+    "support_licit": 5045,
+    "observed_illicit_rate_labeled": 0.19767811704834606,
+    "alert_count_labeled": 1249,
+    "alert_rate_labeled": 0.1986323155216285,
+    "mean_score_labeled": 0.19886513238537612,
+    "threshold": 0.4410238564014435
+  },
+  "artifacts": {
+    "model": {
+      "path": "artifacts/stage2/20261021T162057Z_0930f969/20261021T162057Z_0930f969_xgboost_all_no_time_c2_s2/model.ubj",
+      "sha256": "841d2baf2a13c03ef2b94d0c403dc8b174b80bcfc28b15678d49318d0731a38b"
+    },
+    "validation_predictions": {
+      "path": "artifacts/stage2/20261021T162057Z_0930f969/20261021T162057Z_0930f969_xgboost_all_no_time_c2_s2/validation_predictions.npz",
+      "sha256": "418105a8e72d4fa458e1d3d7792f2018158a83ff625a416612dd4f9f68f7dff9"
+    }
+  }
+}

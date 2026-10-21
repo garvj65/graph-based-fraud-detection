@@ -1,0 +1,276 @@
+{
+  "batch_id": "20261021T162057Z_0930f969",
+  "stage": 2,
+  "status": "completed",
+  "config": {
+    "project": "elliptic-fraud",
+    "stage": 2,
+    "data": {
+      "source": "csv",
+      "root": "data/elliptic",
+      "raw_dir": "data/elliptic/raw",
+      "require_full_dataset": true
+    },
+    "split": {
+      "train": [
+        1,
+        24
+      ],
+      "validation": [
+        25,
+        34
+      ],
+      "test": [
+        35,
+        49
+      ]
+    },
+    "experiment": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "tuning_seed": 0,
+      "representative_seed": 0,
+      "feature_groups": [
+        "local",
+        "all"
+      ],
+      "include_time_options": [
+        true,
+        false
+      ],
+      "primary_include_time": true,
+      "primary_metric": "average_precision",
+      "threshold_objective": "max_f1",
+      "threshold_tie_break": "highest_threshold",
+      "graph_availability": "completed_snapshot",
+      "evaluate_test": false,
+      "alert_budget_per_step": null,
+      "protocol_status": "explicit_defaults_after_unanswered_choice_form"
+    },
+    "models": {
+      "logreg": {
+        "common": {
+          "solver": "lbfgs",
+          "max_iter": 3000,
+          "tol": 1e-05,
+          "class_weight": "balanced"
+        },
+        "candidates": [
+          {
+            "C": 0.1
+          },
+          {
+            "C": 1.0
+          },
+          {
+            "C": 10.0
+          }
+        ]
+      },
+      "xgboost": {
+        "common": {
+          "objective": "binary:logistic",
+          "eval_metric": "logloss",
+          "tree_method": "hist",
+          "device": "cpu",
+          "n_jobs": 4,
+          "n_estimators": 600,
+          "learning_rate": 0.05,
+          "min_child_weight": 5,
+          "subsample": 0.8,
+          "colsample_bytree": 0.8,
+          "max_bin": 256,
+          "verbosity": 0
+        },
+        "candidates": [
+          {
+            "max_depth": 3,
+            "reg_lambda": 1.0
+          },
+          {
+            "max_depth": 5,
+            "reg_lambda": 5.0
+          },
+          {
+            "max_depth": 7,
+            "reg_lambda": 10.0
+          }
+        ]
+      }
+    },
+    "runtime": {
+      "thread_limit": 4
+    },
+    "output_dir": "results/stage2",
+    "artifact_dir": "artifacts/stage2"
+  },
+  "test_evaluated": false,
+  "selected_runs": [
+    "20261021T162057Z_0930f969_logreg_local_with_time_c2_s0",
+    "20261021T162057Z_0930f969_logreg_local_with_time_c2_s1",
+    "20261021T162057Z_0930f969_logreg_local_with_time_c2_s2",
+    "20261021T162057Z_0930f969_logreg_local_with_time_c2_s3",
+    "20261021T162057Z_0930f969_logreg_local_with_time_c2_s4",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c1_s0",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c1_s1",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c1_s2",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c1_s3",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c1_s4",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c2_s0",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c2_s1",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c2_s2",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c2_s3",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c2_s4",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c1_s0",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c1_s1",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c1_s2",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c1_s3",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c1_s4",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c2_s0",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c2_s1",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c2_s2",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c2_s3",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c2_s4",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c1_s0",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c1_s1",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c1_s2",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c1_s3",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c1_s4",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c2_s0",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c2_s1",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c2_s2",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c2_s3",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c2_s4",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s0",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s1",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s2",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s3",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s4"
+  ],
+  "trial_runs": [
+    "20261021T162057Z_0930f969_logreg_local_with_time_c0_s0",
+    "20261021T162057Z_0930f969_logreg_local_with_time_c1_s0",
+    "20261021T162057Z_0930f969_logreg_local_with_time_c2_s0",
+    "20261021T162057Z_0930f969_logreg_local_with_time_c2_s1",
+    "20261021T162057Z_0930f969_logreg_local_with_time_c2_s2",
+    "20261021T162057Z_0930f969_logreg_local_with_time_c2_s3",
+    "20261021T162057Z_0930f969_logreg_local_with_time_c2_s4",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c0_s0",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c1_s0",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c2_s0",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c1_s1",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c1_s2",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c1_s3",
+    "20261021T162057Z_0930f969_xgboost_local_with_time_c1_s4",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c0_s0",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c1_s0",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c2_s0",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c2_s1",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c2_s2",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c2_s3",
+    "20261021T162057Z_0930f969_logreg_local_no_time_c2_s4",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c0_s0",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c1_s0",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c2_s0",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c1_s1",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c1_s2",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c1_s3",
+    "20261021T162057Z_0930f969_xgboost_local_no_time_c1_s4",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c0_s0",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c1_s0",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c2_s0",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c2_s1",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c2_s2",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c2_s3",
+    "20261021T162057Z_0930f969_logreg_all_with_time_c2_s4",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c0_s0",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c1_s0",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c2_s0",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c1_s1",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c1_s2",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c1_s3",
+    "20261021T162057Z_0930f969_xgboost_all_with_time_c1_s4",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c0_s0",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c1_s0",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c2_s0",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c2_s1",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c2_s2",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c2_s3",
+    "20261021T162057Z_0930f969_logreg_all_no_time_c2_s4",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c0_s0",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c1_s0",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s0",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s1",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s2",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s3",
+    "20261021T162057Z_0930f969_xgboost_all_no_time_c2_s4"
+  ],
+  "requested_models": [
+    "logreg",
+    "xgboost"
+  ],
+  "requested_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "provenance": {
+    "versions": {
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "pandas": "2.2.3",
+      "matplotlib": "3.10.8",
+      "PyYAML": "6.0.3",
+      "pytest": "8.4.2",
+      "scikit-learn": "1.7.2",
+      "xgboost": null,
+      "xgboost-cpu": "3.4.1",
+      "joblib": "1.5.3",
+      "torch": null,
+      "torch-geometric": null
+    },
+    "source_files_sha256": {
+      "__init__.py": "2842156607177ab538e89713f5c5e63cbd0d942c1424190a2c675a0781984356",
+      "data.py": "e3f8f5cfbca6812b32839465bbf8c3a8d0124ba5bde2476c89e940a1ca9eed04",
+      "eda.py": "b5bd12a42886021136861d6459936638411cc4a4a20c675e05525cb5a5e37415",
+      "evaluate.py": "93d0aba2cdff36f444ca6fed5a2a4e95822b6a13f074d4c37effae7d96193a09",
+      "models.py": "ca5dad975d7007ab6b04d872328261f3674f439d7a75e33c81b97a29ebadb6dd",
+      "reporting.py": "4a5ad8b9bc56ab0b3abf0cfcfaae4dc3ef493a580f080a88e64292e1604ae220",
+      "train.py": "0533e43e924489bff6fdcb3a84e072fded7044961c35c8d0a1185173ab22c403"
+    },
+    "input_files_sha256": {
+      "elliptic_txs_features.csv": "fd7f83573443c9e302e371d3f110e3b6224160f5d1ed8a287757936127800ff0",
+      "elliptic_txs_edgelist.csv": "a35053ba68a98e4382cae2ba65b9d9e36b23b6439e02dff084971b1b72a5156e",
+      "elliptic_txs_classes.csv": "93e2e7b2405c735ba752bf6ba06b947561deddd1f5a8fc91e46f6a4c0e439493"
+    }
+  },
+  "report": {
+    "evaluation_split": "validation",
+    "time_steps": [
+      25,
+      34
+    ],
+    "test_evaluated": false,
+    "primary_metric": "average_precision",
+    "std_definition": "sample standard deviation across seeds, ddof=1",
+    "primary_include_time": true,
+    "selected_run_count": 40,
+    "tuning_run_count": 24,
+    "best_primary_tabular_variant": {
+      "model": "xgboost",
+      "feature_group": "all",
+      "include_time": true,
+      "n_features": 166,
+      "validation_mean_primary_metric": 0.9853475337437116,
+      "candidate_index": 1
+    },
+    "interpretation": "Validation was used for candidate and threshold selection. These validation metrics are optimistic selection diagnostics, not final test estimates. Seed std measures training variability on the same split, not uncertainty across future periods."
+  }
+}

@@ -1,4 +1,4 @@
-name: stage1-tests
+name: tests
 on: [push, pull_request]
 jobs:
   data-contracts:
