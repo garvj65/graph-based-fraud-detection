@@ -214,3 +214,13 @@ def test_no_labels_rate_is_missing_not_zero(data: EllipticData) -> None:
 def test_partial_dataset_cannot_pass_full_integrity_check(data: EllipticData) -> None:
     with pytest.raises(ValueError, match="counts"):
         validate_data(data, require_full_dataset=True)
+
+
+def test_fractional_raw_timestamp_cannot_round_into_train_split(raw_csvs: Path) -> None:
+    path = raw_csvs / RAW_FILES[0]
+    frame = pd.read_csv(path, header=None)
+    frame[1] = frame[1].astype(float)
+    frame.loc[0, 1] = 24.0000001
+    frame.to_csv(path, header=False, index=False)
+    with pytest.raises(ValueError, match="finite integers"):
+        load_csv(raw_csvs)

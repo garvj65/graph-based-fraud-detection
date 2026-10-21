@@ -168,6 +168,8 @@ def load_csv(raw_dir: Path, *, require_full_dataset: bool = False) -> EllipticDa
         raise FileNotFoundError(f"Missing CSVs in {raw_dir}: {missing}. Use --download.")
     dtypes: dict[int, Any] = {0: str}
     dtypes.update({i: np.float32 for i in range(1, NUMERIC_FEATURE_COUNT + 2)})
+    # Check timestamps before narrowing precision: 24.0000001 rounds to 24 in float32.
+    dtypes[1] = np.float64
     features = pd.read_csv(raw_dir / RAW_FILES[0], header=None, dtype=dtypes)
     if features.shape[1] != NUMERIC_FEATURE_COUNT + 2:
         raise ValueError("Feature CSV must have 167 columns: ID + time + 165 numeric.")
@@ -354,6 +356,10 @@ def environment_versions() -> dict[str, str | None]:
         "matplotlib",
         "PyYAML",
         "pytest",
+        "scikit-learn",
+        "xgboost",
+        "xgboost-cpu",
+        "joblib",
         "torch",
         "torch-geometric",
     ):
