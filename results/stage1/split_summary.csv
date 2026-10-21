@@ -1,0 +1,4 @@
+split,first_step,last_step,nodes,labeled,illicit,licit,unknown
+train,1,24,108950,23606,2219,21387,85344
+validation,25,34,27315,6288,1243,5045,21027
+test,35,49,67504,16670,1083,15587,50834

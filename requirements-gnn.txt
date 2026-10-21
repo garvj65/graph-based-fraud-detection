@@ -1,0 +1,4 @@
+# Optional PyG data-loading route. Stage 4 will validate a pinned training stack.
+-r requirements.txt
+torch>=2.4,<3
+torch-geometric>=2.6,<3

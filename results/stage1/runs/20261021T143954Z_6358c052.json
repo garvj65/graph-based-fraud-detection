@@ -1,0 +1,143 @@
+{
+  "run_id": "20261021T143954Z_6358c052",
+  "stage": 1,
+  "status": "invalidated",
+  "seed": null,
+  "seed_note": "No stochastic training in stage 1; configured seeds reserved for stage 2+.",
+  "config": {
+    "project": "elliptic-fraud",
+    "stage": 1,
+    "data": {
+      "source": "csv",
+      "root": "data/elliptic",
+      "raw_dir": "/workspace/scratch/372d84f913fe/dataset-cache/raw",
+      "require_full_dataset": true
+    },
+    "split": {
+      "train": [
+        1,
+        24
+      ],
+      "validation": [
+        25,
+        34
+      ],
+      "test": [
+        35,
+        49
+      ]
+    },
+    "experiment": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "include_time_as_feature": null,
+      "graph_availability": null,
+      "pr_auc_definition": null,
+      "threshold_objective": null,
+      "alert_budget_per_step": null
+    },
+    "output_dir": "results/stage1"
+  },
+  "argv": [
+    "/workspace/scratch/372d84f913fe/elliptic-fraud/src/data.py",
+    "--config",
+    "configs/default.yaml",
+    "--raw-dir",
+    "/workspace/scratch/372d84f913fe/dataset-cache/raw"
+  ],
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "matplotlib": "3.10.8",
+    "PyYAML": "6.0.3",
+    "pytest": "8.4.2",
+    "torch": null,
+    "torch-geometric": null
+  },
+  "model_metrics": null,
+  "raw_dir": "/workspace/scratch/372d84f913fe/dataset-cache/raw",
+  "input_files": {
+    "elliptic_txs_features.csv": {
+      "sha256": "fd7f83573443c9e302e371d3f110e3b6224160f5d1ed8a287757936127800ff0",
+      "bytes": 689683771
+    },
+    "elliptic_txs_edgelist.csv": {
+      "sha256": "a35053ba68a98e4382cae2ba65b9d9e36b23b6439e02dff084971b1b72a5156e",
+      "bytes": 4470584
+    },
+    "elliptic_txs_classes.csv": {
+      "sha256": "93e2e7b2405c735ba752bf6ba06b947561deddd1f5a8fc91e46f6a4c0e439493",
+      "bytes": 3305144
+    }
+  },
+  "audit": {
+    "nodes": 203769,
+    "edges": 234355,
+    "time_steps": 49,
+    "local_numeric_features": 93,
+    "aggregate_numeric_features": 72,
+    "time_stored_separately": true,
+    "class_counts": {
+      "illicit": 4545,
+      "licit": 42019,
+      "unknown": 157205
+    },
+    "splits": [
+      {
+        "split": "train",
+        "first_step": 1,
+        "last_step": 24,
+        "nodes": 108950,
+        "labeled": 23606,
+        "illicit": 2219,
+        "licit": 21387,
+        "unknown": 85344
+      },
+      {
+        "split": "validation",
+        "first_step": 25,
+        "last_step": 34,
+        "nodes": 27315,
+        "labeled": 6288,
+        "illicit": 1243,
+        "licit": 5045,
+        "unknown": 21027
+      },
+      {
+        "split": "test",
+        "first_step": 35,
+        "last_step": 49,
+        "nodes": 67504,
+        "labeled": 16670,
+        "illicit": 1083,
+        "licit": 15587,
+        "unknown": 50834
+      }
+    ],
+    "cross_time_edges": 0,
+    "duplicate_directed_edges": 234353,
+    "self_loops": 0,
+    "train_graph_nodes_including_unknown": 108950,
+    "train_graph_edges": 127488,
+    "evaluation_edges_touching_train_labeled_nodes": 0,
+    "degree_definition": "in_degree + out_degree; raw directed payment edges, no added self-loops",
+    "degree_mean": 2.3002026804862368,
+    "degree_max": 473,
+    "no_preprocessing_fitted": true,
+    "no_model_trained": true,
+    "unresolved_protocol": [
+      "include time as a feature",
+      "completed-snapshot versus transaction-time information availability",
+      "AP versus trapezoidal PR-AUC",
+      "validation threshold selection objective",
+      "alert budget and labeled-only versus operational top-k denominators"
+    ]
+  },
+  "invalidated_reason": "An audit implementation bug counted edge-array rows instead of unique edge columns. Duplicate-edge statistic is invalid; superseded by a corrected run. No model was trained."
+}

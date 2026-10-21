@@ -1,0 +1,20 @@
+project: elliptic-fraud
+stage: 1
+data:
+  source: csv
+  root: data/elliptic
+  raw_dir: data/elliptic/raw
+  require_full_dataset: true
+split:
+  train: [1, 24]
+  validation: [25, 34]
+  test: [35, 49]
+experiment:
+  seeds: [0, 1, 2, 3, 4]
+  # Intentionally unresolved: no model is trained in stage 1.
+  include_time_as_feature: null
+  graph_availability: null
+  pr_auc_definition: null
+  threshold_objective: null
+  alert_budget_per_step: null
+output_dir: results/stage1
