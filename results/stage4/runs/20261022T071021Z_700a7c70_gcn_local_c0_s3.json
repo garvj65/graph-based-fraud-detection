@@ -1,0 +1,346 @@
+{
+  "run_id": "20261022T071021Z_700a7c70_gcn_local_c0_s3",
+  "batch_id": "20261022T071021Z_700a7c70",
+  "stage": 4,
+  "status": "completed",
+  "model": "gcn",
+  "feature_group": "local",
+  "include_time": true,
+  "feature_names": [
+    "time_step",
+    "local_001",
+    "local_002",
+    "local_003",
+    "local_004",
+    "local_005",
+    "local_006",
+    "local_007",
+    "local_008",
+    "local_009",
+    "local_010",
+    "local_011",
+    "local_012",
+    "local_013",
+    "local_014",
+    "local_015",
+    "local_016",
+    "local_017",
+    "local_018",
+    "local_019",
+    "local_020",
+    "local_021",
+    "local_022",
+    "local_023",
+    "local_024",
+    "local_025",
+    "local_026",
+    "local_027",
+    "local_028",
+    "local_029",
+    "local_030",
+    "local_031",
+    "local_032",
+    "local_033",
+    "local_034",
+    "local_035",
+    "local_036",
+    "local_037",
+    "local_038",
+    "local_039",
+    "local_040",
+    "local_041",
+    "local_042",
+    "local_043",
+    "local_044",
+    "local_045",
+    "local_046",
+    "local_047",
+    "local_048",
+    "local_049",
+    "local_050",
+    "local_051",
+    "local_052",
+    "local_053",
+    "local_054",
+    "local_055",
+    "local_056",
+    "local_057",
+    "local_058",
+    "local_059",
+    "local_060",
+    "local_061",
+    "local_062",
+    "local_063",
+    "local_064",
+    "local_065",
+    "local_066",
+    "local_067",
+    "local_068",
+    "local_069",
+    "local_070",
+    "local_071",
+    "local_072",
+    "local_073",
+    "local_074",
+    "local_075",
+    "local_076",
+    "local_077",
+    "local_078",
+    "local_079",
+    "local_080",
+    "local_081",
+    "local_082",
+    "local_083",
+    "local_084",
+    "local_085",
+    "local_086",
+    "local_087",
+    "local_088",
+    "local_089",
+    "local_090",
+    "local_091",
+    "local_092",
+    "local_093"
+  ],
+  "n_features": 94,
+  "seed": 3,
+  "candidate_index": 0,
+  "phase": "replication",
+  "parameters": {
+    "hidden_channels": 64,
+    "dropout": 0.3,
+    "learning_rate": 0.01
+  },
+  "config": {
+    "project": "elliptic-fraud",
+    "stage": 4,
+    "data": {
+      "raw_dir": "data/elliptic/raw",
+      "require_full_dataset": true
+    },
+    "split": {
+      "train": [
+        1,
+        24
+      ],
+      "validation": [
+        25,
+        34
+      ],
+      "test": [
+        35,
+        49
+      ]
+    },
+    "experiment": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "tuning_seed": 0,
+      "representative_seed": 0,
+      "models": [
+        "gcn",
+        "graphsage"
+      ],
+      "feature_groups": [
+        "local",
+        "all",
+        "structure_only"
+      ],
+      "include_time": true,
+      "primary_feature_group": "all",
+      "primary_metric": "average_precision",
+      "threshold_objective": "max_f1",
+      "threshold_tie_break": "highest_threshold",
+      "graph_availability": "completed_snapshot",
+      "evaluate_test": false,
+      "run_no_message_control": true,
+      "baseline_summary": "results/stage2/validation_primary.csv",
+      "graph_summary": "results/stage3/validation_summary.csv"
+    },
+    "graph": {
+      "direction": "bidirectional_unique",
+      "max_time_step": 34,
+      "pagerank_alpha": 0.85,
+      "pagerank_tolerance": 1e-10,
+      "pagerank_max_iter": 1000,
+      "clustering": "undirected_projection"
+    },
+    "training": {
+      "max_epochs": 250,
+      "patience": 30,
+      "min_delta": 0.0,
+      "gradient_clip_norm": 5.0,
+      "weight_decay": 0.0005,
+      "candidates": [
+        {
+          "hidden_channels": 64,
+          "dropout": 0.3,
+          "learning_rate": 0.01
+        },
+        {
+          "hidden_channels": 64,
+          "dropout": 0.5,
+          "learning_rate": 0.003
+        }
+      ]
+    },
+    "runtime": {
+      "device": "cpu",
+      "thread_limit": 4,
+      "deterministic_algorithms": true
+    },
+    "output_dir": "results/stage4",
+    "artifact_dir": "artifacts/stage4"
+  },
+  "provenance": {
+    "versions": {
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "pandas": "2.2.3",
+      "matplotlib": "3.10.8",
+      "PyYAML": "6.0.3",
+      "pytest": "8.4.2",
+      "scikit-learn": "1.7.2",
+      "xgboost": null,
+      "xgboost-cpu": "3.4.1",
+      "joblib": "1.5.3",
+      "networkx": "3.6.1",
+      "scipy": "1.17.0",
+      "torch": "2.8.0+cpu",
+      "torch-geometric": "2.6.1"
+    },
+    "input_files_sha256": {
+      "elliptic_txs_features.csv": "fd7f83573443c9e302e371d3f110e3b6224160f5d1ed8a287757936127800ff0",
+      "elliptic_txs_edgelist.csv": "a35053ba68a98e4382cae2ba65b9d9e36b23b6439e02dff084971b1b72a5156e",
+      "elliptic_txs_classes.csv": "93e2e7b2405c735ba752bf6ba06b947561deddd1f5a8fc91e46f6a4c0e439493"
+    },
+    "source_files_sha256": {
+      "__init__.py": "2842156607177ab538e89713f5c5e63cbd0d942c1424190a2c675a0781984356",
+      "data.py": "6482ea8b17368f71a5194476af4169865a16bb07c946d2905451bf4cc076abe9",
+      "eda.py": "b5bd12a42886021136861d6459936638411cc4a4a20c675e05525cb5a5e37415",
+      "evaluate.py": "93d0aba2cdff36f444ca6fed5a2a4e95822b6a13f074d4c37effae7d96193a09",
+      "features.py": "f83b4800e5037e54a43912f3629cf046abeeec4fe253b94edb7fd6d08062b8c1",
+      "gnn.py": "f1a3b5fdde5747a85b86d3797a50c30ca62cc536b031f7003471399870fb12d4",
+      "gnn_reporting.py": "747ddc8d2c0b0f7ff58acc2f447525ee0cf73bdb0c978027ed9bb16f3cc869a6",
+      "gnn_train.py": "e4fc9aabd868e467a63f41054188344e17ee52bf14647def8379b9be4c9824f1",
+      "graph_reporting.py": "5f7d68ed00f7feddea6a2e436f33e0b6cee02b93ef922de65c23b8fdd8f4e992",
+      "graph_train.py": "10d877a0fd526dd6d1f0c457593dc7414be13395e787278e0ff2a299d48a3bc4",
+      "models.py": "ca5dad975d7007ab6b04d872328261f3674f439d7a75e33c81b97a29ebadb6dd",
+      "reporting.py": "4a5ad8b9bc56ab0b3abf0cfcfaae4dc3ef493a580f080a88e64292e1604ae220",
+      "train.py": "b4785c7de906c6f8b3bd3253b03b1ca97cb8b266d0e11f4e1ac2dea5045dd443"
+    },
+    "reference_files_sha256": {
+      "baseline_summary": "28249a24895b0572a6268a7b9046cba49b5fff5ab89a79f45d9790fc2778872f",
+      "graph_summary": "27af29a2061ce59c7b24531d53bcfc98ff719e3d3d8219217a4c0a5b60dea65a"
+    }
+  },
+  "data_audit": {
+    "feature_group": "local",
+    "no_messages": false,
+    "graph_direction": "bidirectional_unique",
+    "graphs": {
+      "train": {
+        "nodes": 108950,
+        "unknown_nodes": 85344,
+        "labeled_nodes": 23606,
+        "raw_directed_edges": 127488,
+        "message_edges_without_self_loops": 254976,
+        "min_time": 1,
+        "max_time": 24,
+        "input_sha256": "0486ecf54b374371c0ae1b0e18c340cbdd5595195b1168793cb3dca4af0da186",
+        "supervision_sha256": "9cf6f2be24bb0f309af3309571fa3645e7595cad1a7f7952f9658748223fee2a"
+      },
+      "validation": {
+        "nodes": 27315,
+        "unknown_nodes": 21027,
+        "labeled_nodes": 6288,
+        "raw_directed_edges": 29355,
+        "message_edges_without_self_loops": 58710,
+        "min_time": 25,
+        "max_time": 34,
+        "input_sha256": "b00fceb90bf97014a6ed3969569577a45a17e63287619cbe466bca19f8c26bc8",
+        "supervision_sha256": "184b305e1a427c16152b5039926b56a075a63078921881bd643dbc58c8f86788"
+      }
+    },
+    "scaler_fit_scope": "known training rows, steps 1\u201324 only",
+    "scaler_n_samples_seen": 23606,
+    "scaler_mean_sha256": "e0d0f08cd79533f088986f521ba36c2394ebd47ed90233d600812e70220be4aa",
+    "scaler_scale_sha256": "d0b9f37e67b7edba97f687d607e505223b76c9f94532ff9c0109ba56d52789b0",
+    "structure_snapshots": [],
+    "test_features_computed": false
+  },
+  "fit_scope": "graph nodes 1\u201324; known train labels only in loss",
+  "selection_scope": "known validation labels 25\u201334; AP early stopping",
+  "test_evaluated": false,
+  "fit_seconds": 42.449646736999966,
+  "class_weights": {
+    "licit": 0.5518773086454388,
+    "illicit": 5.319062640829203,
+    "scale_pos_weight": 9.638125281658406
+  },
+  "best_epoch": 151,
+  "epochs_run": 181,
+  "stop_reason": "patience",
+  "best_validation_ap": 0.866612478793899,
+  "threshold": {
+    "value": 0.562514066696167,
+    "objective": "max_illicit_f1",
+    "selection_split": "validation",
+    "tie_break": "highest_threshold",
+    "comparison": "score >= threshold",
+    "validation_f1_at_selection": 0.794221007418977,
+    "validation_labeled_support": 6288,
+    "validation_scores_sha256": "d8800c3c349c5510272f1fa3f56adc5b8fd9a9f0afc407b1f9473b5892b6a949"
+  },
+  "validation_metrics": {
+    "average_precision": 0.866612478793899,
+    "pr_auc_trapezoid": 0.8665540225714822,
+    "precision": 0.7716236722306525,
+    "recall": 0.8181818181818182,
+    "f1": 0.7942210074189769,
+    "roc_auc": 0.9542368083866282,
+    "confusion_matrix": [
+      [
+        4744,
+        301
+      ],
+      [
+        226,
+        1017
+      ]
+    ],
+    "support_labeled": 6288,
+    "support_illicit": 1243,
+    "support_licit": 5045,
+    "observed_illicit_rate_labeled": 0.19767811704834606,
+    "alert_count_labeled": 1318,
+    "alert_rate_labeled": 0.20960559796437658,
+    "mean_score_labeled": 0.24515450231783395,
+    "threshold": 0.562514066696167
+  },
+  "parameter_count": 6145,
+  "device": "cpu",
+  "artifacts": {
+    "checkpoint": {
+      "path": "artifacts/stage4/20261022T071021Z_700a7c70/20261022T071021Z_700a7c70_gcn_local_c0_s3/checkpoint.pt",
+      "sha256": "7dbb24f7e83d7ace351b1d57a923a9b7f5d713b1a1b36142197b65050694cd49"
+    },
+    "scaler": {
+      "path": "artifacts/stage4/20261022T071021Z_700a7c70/20261022T071021Z_700a7c70_gcn_local_c0_s3/scaler.joblib",
+      "sha256": "600b7dbdb54b5e80d970bc5bc416120959dc07efa1604a2bdee6aa6d8df05bac"
+    },
+    "validation_predictions": {
+      "path": "artifacts/stage4/20261022T071021Z_700a7c70/20261022T071021Z_700a7c70_gcn_local_c0_s3/validation_predictions.npz",
+      "sha256": "6a8cdd694037e6b69604ec501aa1e7da066f3d9c2af4115ecbe44e4545171c20"
+    },
+    "history": {
+      "path": "results/stage4/histories/20261022T071021Z_700a7c70_gcn_local_c0_s3.csv",
+      "sha256": "1474ea9806581bbc67bf8fc5a96b376c7976ba171b9372a3dcca9d1d68861ecd"
+    }
+  }
+}

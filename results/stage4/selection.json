@@ -1,0 +1,130 @@
+{
+  "evaluation_split": "validation",
+  "time_steps": [
+    25,
+    34
+  ],
+  "test_evaluated": false,
+  "primary_metric": "average_precision",
+  "choices": {
+    "gcn_local": {
+      "candidate_index": 0,
+      "parameters": {
+        "hidden_channels": 64,
+        "dropout": 0.3,
+        "learning_rate": 0.01
+      },
+      "selection_seed": 0,
+      "selection_metric": "validation_average_precision"
+    },
+    "gcn_all": {
+      "candidate_index": 0,
+      "parameters": {
+        "hidden_channels": 64,
+        "dropout": 0.3,
+        "learning_rate": 0.01
+      },
+      "selection_seed": 0,
+      "selection_metric": "validation_average_precision"
+    },
+    "gcn_structure_only": {
+      "candidate_index": 0,
+      "parameters": {
+        "hidden_channels": 64,
+        "dropout": 0.3,
+        "learning_rate": 0.01
+      },
+      "selection_seed": 0,
+      "selection_metric": "validation_average_precision"
+    },
+    "graphsage_local": {
+      "candidate_index": 0,
+      "parameters": {
+        "hidden_channels": 64,
+        "dropout": 0.3,
+        "learning_rate": 0.01
+      },
+      "selection_seed": 0,
+      "selection_metric": "validation_average_precision"
+    },
+    "graphsage_all": {
+      "candidate_index": 0,
+      "parameters": {
+        "hidden_channels": 64,
+        "dropout": 0.3,
+        "learning_rate": 0.01
+      },
+      "selection_seed": 0,
+      "selection_metric": "validation_average_precision"
+    },
+    "graphsage_structure_only": {
+      "candidate_index": 0,
+      "parameters": {
+        "hidden_channels": 64,
+        "dropout": 0.3,
+        "learning_rate": 0.01
+      },
+      "selection_seed": 0,
+      "selection_metric": "validation_average_precision"
+    }
+  },
+  "std_definition": "sample standard deviation across seeds, ddof=1",
+  "selected_run_count": 40,
+  "tuning_run_count": 12,
+  "unique_fit_count": 46,
+  "primary_results": [
+    {
+      "model": "gcn",
+      "feature_group": "all",
+      "include_time": true,
+      "n_features": 166,
+      "n_seeds": 5,
+      "candidate_index": 0,
+      "average_precision_mean": 0.862198117527776,
+      "average_precision_std": 0.017221510708201566,
+      "pr_auc_trapezoid_mean": 0.8618511055071558,
+      "pr_auc_trapezoid_std": 0.017366408505942347,
+      "precision_mean": 0.783054178635891,
+      "precision_std": 0.018357681785878238,
+      "recall_mean": 0.8289621882542235,
+      "recall_std": 0.014720467271417752,
+      "f1_mean": 0.8051706942864001,
+      "f1_std": 0.00987583159309616,
+      "roc_auc_mean": 0.9595327331570171,
+      "roc_auc_std": 0.00360724938070017,
+      "alert_rate_labeled_mean": 0.20938295165394405,
+      "alert_rate_labeled_std": 0.007148178664245926,
+      "mean_score_labeled_mean": 0.2356446305610259,
+      "mean_score_labeled_std": 0.019015836635923898,
+      "threshold_mean": 0.5653733134269714,
+      "threshold_std": 0.07946250896582607
+    },
+    {
+      "model": "graphsage",
+      "feature_group": "all",
+      "include_time": true,
+      "n_features": 166,
+      "n_seeds": 5,
+      "candidate_index": 0,
+      "average_precision_mean": 0.9466573329569034,
+      "average_precision_std": 0.006584029794832481,
+      "pr_auc_trapezoid_mean": 0.9466378665111321,
+      "pr_auc_trapezoid_std": 0.006589326185911503,
+      "precision_mean": 0.8933635586240216,
+      "precision_std": 0.01667403458048692,
+      "recall_mean": 0.8754625905068384,
+      "recall_std": 0.015022936967108687,
+      "f1_mean": 0.8841490079140588,
+      "f1_std": 0.0077089503062040534,
+      "roc_auc_mean": 0.9828652824499058,
+      "roc_auc_std": 0.001616030472645506,
+      "alert_rate_labeled_mean": 0.19379770992366413,
+      "alert_rate_labeled_std": 0.006102188554800408,
+      "mean_score_labeled_mean": 0.21164001591112372,
+      "mean_score_labeled_std": 0.006119993582729633,
+      "threshold_mean": 0.6525622725486755,
+      "threshold_std": 0.09505264788396171
+    }
+  ],
+  "interpretation": "Validation selects candidates, epochs and thresholds; scores are optimistic development diagnostics. Five seeds measure fitting variation, not temporal uncertainty. Final test and monitoring remain Stages 5 and 6."
+}

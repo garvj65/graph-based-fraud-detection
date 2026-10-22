@@ -213,6 +213,14 @@ def validate(output: Path) -> dict:
         "test_evaluated": False,
         "test_graph_features_computed": False,
     }
+    interrupted = list((output / "interrupted_runs").glob("*.json"))
+    for path in interrupted:
+        record = json.loads(path.read_text())
+        assert record["status"] == "interrupted"
+        assert record["excluded_from_selection_and_metrics"] is True
+        assert record["resumed_run_id"] in all_ids
+        assert "validation_metrics" not in record
+    result["interrupted_attempts_excluded"] = len(interrupted)
     write_json(output / "independent_validation.json", result)
     return result
 

@@ -1,0 +1,17 @@
+{
+  "batch_id": "20261022T071021Z_700a7c70",
+  "status": "passed",
+  "unique_checkpoints_reloaded": 46,
+  "selected_runs_checked": 40,
+  "input_and_source_hashes_verified": true,
+  "train_only_scalers_and_weights_verified": true,
+  "unknown_exclusion_and_temporal_membership_verified": true,
+  "checkpoint_validation_scores_bitwise_identical": true,
+  "ap_threshold_and_confusion_independently_recomputed": true,
+  "best_epochs_and_candidate_choices_verified": true,
+  "summary_means_sample_std_and_message_deltas_verified": true,
+  "representative_csv_round_trip_verified": true,
+  "test_evaluated": false,
+  "test_graph_features_computed": false,
+  "interrupted_attempts_excluded": 1
+}

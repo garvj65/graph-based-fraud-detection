@@ -83,6 +83,22 @@ algorithms are requested; unavailable deterministic operations fail explicitly.
 Floating-point identity across different machines or dependency versions is
 not guaranteed. Single-seed summaries report unavailable std.
 
+If an execution session is interrupted, the batch can be resumed:
+
+```bash
+python scripts/resume_stage4.py --batch results/stage4/batches/<batch_id>.json --workers 2
+python scripts/validate_stage4.py
+python scripts/summarize_stage4.py
+```
+
+The recorded experiment resumed after 32 completed fits. Those artifacts were
+hash-checked and reused. One unfinished attempt was archived, excluded from
+selection/metrics, and restarted with its original seed. The remaining fits
+used two independent CPU workers, each retaining the configured four threads.
+No data, hyperparameter, checkpoint criterion or threshold policy changed.
+The batch logs the resumption script hash and worker settings. A clean run
+still requires 46 completed fits; interruption attempts have no final metrics.
+
 Run JSONs log effective configs, seeds, class weights, feature/graph/scaler
 fingerprints, source/data versions and hashes, best epochs, metrics and artifact
 hashes. Epoch histories and representative validation scores are committed.

@@ -3,13 +3,37 @@
 **Question:** Do additional graph features and small GNNs improve on a strong
 tabular baseline, and does the model remain reliable over time?
 
-**Status: Stages 1–3 complete; Stage 4 GNN experiment in progress.**
-The dataset, temporal splits, weighted tabular baselines and additional graph
-features have real five-seed validation results. Final test evaluation and
+**Status: Stages 1–4 complete; paused before Stage 5 (final test evaluation).**
+The audited temporal splits, weighted tabular baselines, additional graph
+features and GNNs have real five-seed validation results. Final test evaluation and
 over-time monitoring remain future review stages.
 
 This is an offline benchmark for an Associate Data Scientist portfolio. It is
 not a real-time fraud service or a claim of deployment experience.
+
+<!-- stage4-measured-start -->
+## Current comparison — validation only
+
+Known labels, steps 25–34; mean ± sample std over five seeds. AP means average precision. Each run's maximum-F1 validation threshold is frozen for test.
+
+| Model | Inputs | Features | Seeds | AP (PR-AUC) | Precision | Recall | F1 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| LogReg | all | 166 | 5 | 0.6115 ± 0.0000 | 0.6327 ± 0.0000 | 0.8053 ± 0.0000 | 0.7087 ± 0.0000 |
+| XGBoost | all | 166 | 5 | 0.9853 ± 0.0018 | 0.9533 ± 0.0109 | 0.9514 ± 0.0046 | 0.9523 ± 0.0065 |
+| XGBoost | local | 94 | 5 | 0.9829 ± 0.0005 | 0.9611 ± 0.0169 | 0.9176 ± 0.0176 | 0.9386 ± 0.0013 |
+| XGBoost | all_graph | 174 | 5 | 0.9853 ± 0.0014 | 0.9501 ± 0.0126 | 0.9524 ± 0.0049 | 0.9512 ± 0.0051 |
+| XGBoost | all_structure | 172 | 5 | 0.9860 ± 0.0014 | 0.9574 ± 0.0053 | 0.9500 ± 0.0117 | 0.9536 ± 0.0061 |
+| GCN | all | 166 | 5 | 0.8622 ± 0.0172 | 0.7831 ± 0.0184 | 0.8290 ± 0.0147 | 0.8052 ± 0.0099 |
+| GraphSAGE | all | 166 | 5 | 0.9467 ± 0.0066 | 0.8934 ± 0.0167 | 0.8755 ± 0.0150 | 0.8841 ± 0.0077 |
+
+Neither primary GNN demonstrates a mean validation AP advantage over the strongest tabular result under this compute and tuning budget. Full results include local/all/structure-only and no-message ablations. Seed std describes fitting variation, not future-period uncertainty.
+
+![GNN feature and message ablations](results/stage4/figures/gnn_comparison.png)
+
+![Representative GNN learning curves](results/stage4/figures/learning_curves.png)
+
+See [the Stage 4 report](results/stage4/REPORT.md), [checkpoint and metric validation](results/stage4/independent_validation.json), [epoch-budget audit](results/stage4/budget_audit.csv), and [five interview findings](docs/stage4_findings.md). Test results and monitoring remain Stages 5 and 6.
+<!-- stage4-measured-end -->
 
 ## Reproduce stages 1–4
 
@@ -319,8 +343,8 @@ synthetic fixtures; dataset findings use only the downloaded real release.
    five-seed validation results and frozen thresholds. Reviewed.
 3. **Graph features:** complete; NetworkX structure, forward-chained neighbor
    scores, paired five-seed comparisons and structure-only ablation. Reviewed.
-4. **GNNs:** in progress; small GCN and GraphSAGE, weighted supervised loss,
-   training-period message passing, validation early stopping, five seeds.
+4. **GNNs:** complete; GCN and GraphSAGE, five seeds, feature/message ablations,
+   validation-AP early stopping and independently validated checkpoints. Paused for review.
 5. **Evaluation:** fixed validation-selected thresholds; AP primary, trapezoidal
    PR-AUC separate; precision/recall/F1, confusion matrix, top-k and secondary ROC-AUC;
    mean ± sample std, paired seed differences and feature/structure ablations.

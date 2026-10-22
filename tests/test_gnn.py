@@ -147,6 +147,23 @@ def test_gcn_cannot_reuse_training_adjacency_for_validation(data, config):
     assert model.conv1.cached is False and model.conv2.cached is False
 
 
+@pytest.mark.parametrize("architecture", ["gcn", "graphsage"])
+def test_later_validation_snapshot_cannot_change_earlier_scores(data, config, architecture):
+    original = prepare_gnn_data(data, "all", config["graph"])
+    x = data.x.copy()
+    x[data.time_step == 34] *= -10000
+    later = np.flatnonzero(data.time_step == 34)
+    extra_edge = np.array([[later[0]], [later[2]]])
+    modified = replace(data, x=x, edge_index=np.column_stack([data.edge_index, extra_edge]))
+    changed = prepare_gnn_data(modified, "all", config["graph"])
+    model = SmallGNN(architecture, 166, 8, 0.0).eval()
+    with torch.no_grad():
+        scores_a = model(original.validation.x, original.validation.edge_index)
+        scores_b = model(changed.validation.x, changed.validation.edge_index)
+    earlier = torch.from_numpy(original.validation.times == 25)
+    assert torch.equal(scores_a[earlier], scores_b[earlier])
+
+
 def test_no_message_control_has_no_inter_node_edges(data, config):
     standard = prepare_gnn_data(data, "all", config["graph"])
     control = prepare_gnn_data(data, "all", config["graph"], no_messages=True)

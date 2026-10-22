@@ -20,3 +20,4 @@ stage4:
 	python -m pytest -q
 	python -m src.gnn_train --config configs/stage4.yaml --download
 	python scripts/validate_stage4.py
+	python scripts/summarize_stage4.py
