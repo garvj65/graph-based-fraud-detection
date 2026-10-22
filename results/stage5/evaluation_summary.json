@@ -1,0 +1,24 @@
+{
+  "evaluation_split": "test",
+  "time_steps": [
+    35,
+    49
+  ],
+  "evaluated_runs": 100,
+  "primary_variants": [
+    "s2_logreg_all_time",
+    "s2_xgboost_local_time",
+    "s2_xgboost_all_time",
+    "s3_xgboost_all_structure",
+    "s3_xgboost_all_graph",
+    "s4_gcn_all",
+    "s4_graphsage_all"
+  ],
+  "validation_selected_variant": "s3_xgboost_all_structure",
+  "validation_selected_variant_test_ap": 0.783743098297569,
+  "test_used_for_model_or_threshold_selection": false,
+  "std_definition": "sample std over training seeds, ddof=1; not temporal uncertainty",
+  "alert_budget_per_step": 100,
+  "unknown_labels_assigned_negative": false,
+  "monitoring_completed": false
+}

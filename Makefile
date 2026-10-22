@@ -27,3 +27,4 @@ stage5:
 	python -m pytest -q
 	python -m src.final_evaluate --config configs/stage5.yaml
 	python scripts/validate_stage5.py
+	python scripts/summarize_stage5.py

@@ -1,0 +1,27 @@
+........................................................................ [ 64%]
+........................................                                 [100%]
+112 passed in 12.01s
+
+Ruff: All checks passed.
+
+{
+  "batch_id": "20261022T091411Z_1dd24bdd",
+  "status": "passed",
+  "frozen_models_reloaded": 100,
+  "test_scores_bitwise_reproduced": true,
+  "protocol_and_input_hashes_verified": true,
+  "original_validation_thresholds_unchanged": true,
+  "test_ap_and_confusion_independently_recomputed": true,
+  "both_budget_denominators_and_unknown_counts_verified": true,
+  "budget_totals_and_summary_statistics_verified": true,
+  "representative_queue_rankings_verified": true,
+  "stage3_control_reproduces_stage2_on_test": true,
+  "recall_policies_rederived_from_validation_only": true,
+  "five_seed_means_and_sample_std_verified": true,
+  "model_selection_uses_validation_only": true,
+  "representative_scores_round_trip_verified": true,
+  "models_or_preprocessors_fitted": false,
+  "monitoring_completed": false
+}
+
+GitHub code CI: https://github.com/garvj65/graph-based-fraud-detection/actions/runs/39755940163 (passed Python 3.10 and 3.12, base and GNN jobs).

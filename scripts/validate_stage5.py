@@ -178,18 +178,23 @@ def validate(output: Path) -> dict[str, Any]:
         frame = representative[representative.variant == run["variant"]]
         with np.load(run["test_predictions"]["path"]) as saved:
             known = saved["label"] != -1
-            np.testing.assert_array_equal(frame.score.to_numpy(), saved["score"][known])
-            np.testing.assert_array_equal(frame.tx_id.to_numpy(), saved["tx_id"][known])
+            saved_scores, saved_ids, saved_times = (
+                saved["score"],
+                saved["tx_id"],
+                saved["time_step"],
+            )
+            np.testing.assert_array_equal(frame.score.to_numpy(), saved_scores[known])
+            np.testing.assert_array_equal(frame.tx_id.to_numpy(), saved_ids[known])
             if queues is not None:
                 for step in range(35, 50):
-                    indices = np.flatnonzero(saved["time_step"] == step)
+                    indices = np.flatnonzero(saved_times == step)
                     chosen = sorted(
-                        indices, key=lambda i: (-float(saved["score"][i]), str(saved["tx_id"][i]))
+                        indices, key=lambda i: (-float(saved_scores[i]), str(saved_ids[i]))
                     )
                     chosen = chosen[: config["alert_budget"]["per_time_step"]]
                     queue = queues[(queues.variant == run["variant"]) & (queues.time_step == step)]
-                    np.testing.assert_array_equal(queue.tx_id.to_numpy(), saved["tx_id"][chosen])
-                    np.testing.assert_array_equal(queue.score.to_numpy(), saved["score"][chosen])
+                    np.testing.assert_array_equal(queue.tx_id.to_numpy(), saved_ids[chosen])
+                    np.testing.assert_array_equal(queue.score.to_numpy(), saved_scores[chosen])
     budget_micro = pd.read_csv(output / "budget_per_seed.csv", float_precision="round_trip")
     for run in runs:
         for view in config["alert_budget"]["views"]:

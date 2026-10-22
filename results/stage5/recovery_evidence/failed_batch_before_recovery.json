@@ -1,0 +1,198 @@
+{
+  "batch_id": "20261022T091411Z_1dd24bdd",
+  "stage": 5,
+  "status": "failed",
+  "config": {
+    "project": "elliptic-fraud",
+    "stage": 5,
+    "data": {
+      "raw_dir": "data/elliptic/raw",
+      "require_full_dataset": true
+    },
+    "split": {
+      "train": [
+        1,
+        24
+      ],
+      "validation": [
+        25,
+        34
+      ],
+      "test": [
+        35,
+        49
+      ]
+    },
+    "experiment": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "representative_seed": 0,
+      "primary_metric": "average_precision",
+      "graph_availability": "completed_snapshot",
+      "threshold_policy": "reuse_each_saved_validation_max_f1_threshold",
+      "evaluate_test": true,
+      "fit_models_or_preprocessors": false,
+      "selection_rule": "highest_mean_validation_ap_among_primary_variants",
+      "recall_targets": [
+        0.5,
+        0.8,
+        0.9
+      ],
+      "protocol_status": "explicit_defaults_after_unanswered_choice_form",
+      "primary_variants": [
+        "s2_logreg_all_time",
+        "s2_xgboost_local_time",
+        "s2_xgboost_all_time",
+        "s3_xgboost_all_structure",
+        "s3_xgboost_all_graph",
+        "s4_gcn_all",
+        "s4_graphsage_all"
+      ]
+    },
+    "alert_budget": {
+      "per_time_step": 100,
+      "views": [
+        "labeled_only",
+        "all_transactions"
+      ],
+      "tie_break": "transaction_id_lexicographic",
+      "threshold_and_budget_are_separate_policies": true
+    },
+    "graph": {
+      "pagerank_alpha": 0.85,
+      "pagerank_tolerance": 1e-10,
+      "pagerank_max_iter": 1000,
+      "clustering": "undirected_projection",
+      "no_neighbor_score": 0.0
+    },
+    "references": {
+      "stage2": "results/stage2/latest_run.json",
+      "stage3": "results/stage3/latest_run.json",
+      "stage4": "results/stage4/latest_run.json",
+      "score_helper_log": null
+    },
+    "runtime": {
+      "device": "cpu",
+      "thread_limit": 4,
+      "validation_score_atol": 1e-12
+    },
+    "output_dir": "results/stage5",
+    "artifact_dir": "artifacts/stage5"
+  },
+  "evaluation_runs": [
+    "20261022T091411Z_1dd24bdd_s2_logreg_local_time_s0",
+    "20261022T091411Z_1dd24bdd_s2_logreg_local_time_s1",
+    "20261022T091411Z_1dd24bdd_s2_logreg_local_time_s2",
+    "20261022T091411Z_1dd24bdd_s2_logreg_local_time_s3",
+    "20261022T091411Z_1dd24bdd_s2_logreg_local_time_s4",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_local_time_s0",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_local_time_s1",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_local_time_s2",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_local_time_s3",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_local_time_s4",
+    "20261022T091411Z_1dd24bdd_s2_logreg_local_no_time_s0",
+    "20261022T091411Z_1dd24bdd_s2_logreg_local_no_time_s1",
+    "20261022T091411Z_1dd24bdd_s2_logreg_local_no_time_s2",
+    "20261022T091411Z_1dd24bdd_s2_logreg_local_no_time_s3",
+    "20261022T091411Z_1dd24bdd_s2_logreg_local_no_time_s4",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_local_no_time_s0",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_local_no_time_s1",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_local_no_time_s2",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_local_no_time_s3",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_local_no_time_s4",
+    "20261022T091411Z_1dd24bdd_s2_logreg_all_time_s0",
+    "20261022T091411Z_1dd24bdd_s2_logreg_all_time_s1",
+    "20261022T091411Z_1dd24bdd_s2_logreg_all_time_s2",
+    "20261022T091411Z_1dd24bdd_s2_logreg_all_time_s3",
+    "20261022T091411Z_1dd24bdd_s2_logreg_all_time_s4",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_all_time_s0",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_all_time_s1",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_all_time_s2",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_all_time_s3",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_all_time_s4",
+    "20261022T091411Z_1dd24bdd_s2_logreg_all_no_time_s0",
+    "20261022T091411Z_1dd24bdd_s2_logreg_all_no_time_s1",
+    "20261022T091411Z_1dd24bdd_s2_logreg_all_no_time_s2",
+    "20261022T091411Z_1dd24bdd_s2_logreg_all_no_time_s3",
+    "20261022T091411Z_1dd24bdd_s2_logreg_all_no_time_s4",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_all_no_time_s0",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_all_no_time_s1",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_all_no_time_s2",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_all_no_time_s3",
+    "20261022T091411Z_1dd24bdd_s2_xgboost_all_no_time_s4",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_control_s0",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_control_s1",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_control_s2",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_control_s3",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_control_s4",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_structure_s0",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_structure_s1",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_structure_s2",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_structure_s3",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_structure_s4",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_graph_s0",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_graph_s1",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_graph_s2",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_graph_s3",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_all_graph_s4",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_structure_only_s0",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_structure_only_s1",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_structure_only_s2",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_structure_only_s3",
+    "20261022T091411Z_1dd24bdd_s3_xgboost_structure_only_s4",
+    "20261022T091411Z_1dd24bdd_s4_gcn_local_s0",
+    "20261022T091411Z_1dd24bdd_s4_gcn_local_s1",
+    "20261022T091411Z_1dd24bdd_s4_gcn_local_s2",
+    "20261022T091411Z_1dd24bdd_s4_gcn_local_s3",
+    "20261022T091411Z_1dd24bdd_s4_gcn_local_s4",
+    "20261022T091411Z_1dd24bdd_s4_gcn_all_s0",
+    "20261022T091411Z_1dd24bdd_s4_gcn_all_s1",
+    "20261022T091411Z_1dd24bdd_s4_gcn_all_s2",
+    "20261022T091411Z_1dd24bdd_s4_gcn_all_s3",
+    "20261022T091411Z_1dd24bdd_s4_gcn_all_s4",
+    "20261022T091411Z_1dd24bdd_s4_gcn_structure_only_s0",
+    "20261022T091411Z_1dd24bdd_s4_gcn_structure_only_s1",
+    "20261022T091411Z_1dd24bdd_s4_gcn_structure_only_s2",
+    "20261022T091411Z_1dd24bdd_s4_gcn_structure_only_s3",
+    "20261022T091411Z_1dd24bdd_s4_gcn_structure_only_s4",
+    "20261022T091411Z_1dd24bdd_s4_gcn_all_no_messages_s0",
+    "20261022T091411Z_1dd24bdd_s4_gcn_all_no_messages_s1",
+    "20261022T091411Z_1dd24bdd_s4_gcn_all_no_messages_s2",
+    "20261022T091411Z_1dd24bdd_s4_gcn_all_no_messages_s3",
+    "20261022T091411Z_1dd24bdd_s4_gcn_all_no_messages_s4",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_local_s0",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_local_s1",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_local_s2",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_local_s3",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_local_s4",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_all_s0",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_all_s1",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_all_s2",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_all_s3",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_all_s4",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_structure_only_s2",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_structure_only_s1",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_structure_only_s3",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_structure_only_s4",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_structure_only_s0",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_all_no_messages_s1",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_all_no_messages_s0",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_all_no_messages_s2",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_all_no_messages_s3",
+    "20261022T091411Z_1dd24bdd_s4_graphsage_all_no_messages_s4"
+  ],
+  "models_or_preprocessors_fitted": false,
+  "protocol": {
+    "path": "results/stage5/protocols/20261022T091411Z_1dd24bdd.json",
+    "sha256": "296ec1625a53bd560b169334389542b90a7c5e8cc55c342045b36f827f952c33"
+  },
+  "error": {
+    "type": "BadZipFile",
+    "message": "File is not a zip file"
+  }
+}

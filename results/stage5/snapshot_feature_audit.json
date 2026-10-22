@@ -1,0 +1,227 @@
+[
+  {
+    "time_step": 25,
+    "nodes": 2314,
+    "raw_directed_edges": 2619,
+    "structure_sha256": "07008d12626091caed5038c144b8ddaa1baafbab9d210cfd9d1348f9a3756a5a",
+    "neighbor_scores_sha256": "4e0fe9f38f98d34053dd9f1005c1a13b4eb5da0f46f2c52831ee80a3b553ae95",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 26,
+    "nodes": 2523,
+    "raw_directed_edges": 2690,
+    "structure_sha256": "bdaed38b196e82f72450592ae70125d6ced47c2a2b1e2c8594353b276834de86",
+    "neighbor_scores_sha256": "a25a0f98ba1552f73929fc4a62920d5045e8ffe10c22f0e3bfc0123e3b8c46d4",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 27,
+    "nodes": 1089,
+    "raw_directed_edges": 1168,
+    "structure_sha256": "7662a87a80651a4d0c68ade796fe03ec439ac93137a3056edbd50dc6959d8b4c",
+    "neighbor_scores_sha256": "c4b5cb691caa88be0e861f4273b5485ce0eab9c81c4e41ca4313086d5c2876f7",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 28,
+    "nodes": 1653,
+    "raw_directed_edges": 1717,
+    "structure_sha256": "398aba1d3896cc8a558db7e366c80639a204d0a5c434f010770f4daca3e9be14",
+    "neighbor_scores_sha256": "f81b80d9ebe4eb68bd4533076bdec076c3bd81c2de98ab16f0141701dfbd7f29",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 29,
+    "nodes": 4275,
+    "raw_directed_edges": 4541,
+    "structure_sha256": "abb97a481d7154f1ad3d516eb9796eda9a046df77149b261377680f0ae434bce",
+    "neighbor_scores_sha256": "fec940e6ea92d46da47fed740d62230e02a890b79dc2f193770c24d240971cd6",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 30,
+    "nodes": 2483,
+    "raw_directed_edges": 2561,
+    "structure_sha256": "951ad1cf98171a446df3e4ffd2f5bc03e22502d6af710ebeec50c1e6ed4085f5",
+    "neighbor_scores_sha256": "1a2f349b68b595dc4a2c29fd37abc61d7bc5f556ed01b6e0e4abcc32ac06b909",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 31,
+    "nodes": 2816,
+    "raw_directed_edges": 3049,
+    "structure_sha256": "b44ff8d8056d95aac915b0c2a0f80557afffef4ef6bd9c930febd5cbf548cd19",
+    "neighbor_scores_sha256": "685677d0e5a5c09364e08f0b00eda7347631ce5e1520e5aee614184688e49fb0",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 32,
+    "nodes": 4525,
+    "raw_directed_edges": 4952,
+    "structure_sha256": "6fe0a3a3e59a076daba5f5c5c2c2bd5f0ba36a46f9058c7ffa495641eac87dbe",
+    "neighbor_scores_sha256": "112d36833a8ac64735457807e71399e400e9a9c806b76b190d1862bbcb3fabd0",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 33,
+    "nodes": 3151,
+    "raw_directed_edges": 3366,
+    "structure_sha256": "bda993247a9654c63f4a138d953537c11408abf66cf0e33d403776a908689433",
+    "neighbor_scores_sha256": "31f35b9008256357a97cfa3e6b1d0e5484556a390c047a06d969f9a76b52ccd4",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 34,
+    "nodes": 2486,
+    "raw_directed_edges": 2692,
+    "structure_sha256": "a2b96927411b474eba9fc207aef803dd1d7c1ed630a788aabe3578c9e9bd94d6",
+    "neighbor_scores_sha256": "78ab01f7da01f55e5eb937f1e36a29db81f6236c9dd5a8513d52742ce505b92b",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 35,
+    "nodes": 5507,
+    "raw_directed_edges": 6351,
+    "structure_sha256": "7c77e0a1647d1083bda0f13f9533c952fda0cc3f28419d39b4dd05ebc9adeb67",
+    "neighbor_scores_sha256": "df0c77bbf6c3018b268870f6a16f6a1aff24e07b4737005773db8fab1a825c47",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 36,
+    "nodes": 6393,
+    "raw_directed_edges": 7813,
+    "structure_sha256": "1b2dd5780ace089a1960d1a5e43b43f66c2bd206050d73d3ed6fce0386693138",
+    "neighbor_scores_sha256": "f4bfc7ee94bd57cc35a8f5f3515ff348bec9813257884de1980813d1ebb289f0",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 37,
+    "nodes": 3306,
+    "raw_directed_edges": 3849,
+    "structure_sha256": "9e2b14692772029d415bf36faa348c469eb553281d704e27e5f209835a0cac4e",
+    "neighbor_scores_sha256": "18762c1f56879ccd0aeddb61d8b97586489a54984f66dff94909bb2ada763e8d",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 38,
+    "nodes": 2891,
+    "raw_directed_edges": 3094,
+    "structure_sha256": "b6e69e053c438d9b227a67863e6d51a3c2ce9770196a655ee4bf277099f0755a",
+    "neighbor_scores_sha256": "21afb0da9331792f02e4a889eabd134adce255ffb9ca3059c67bddc8837b23ec",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 39,
+    "nodes": 2760,
+    "raw_directed_edges": 2914,
+    "structure_sha256": "2c16a43a6ee5c670bca2d74a8b805d2d3ab02e398846f9bd50b18aa27510f514",
+    "neighbor_scores_sha256": "490f5fc34f2c115e52712501d13cf385aac2cf199db60dae58b311e162304dbb",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 40,
+    "nodes": 4481,
+    "raw_directed_edges": 5246,
+    "structure_sha256": "6eec93c0448bcf020b9b42db6d26e3e1a0f1000bf986ac81e6719580701ae31b",
+    "neighbor_scores_sha256": "d170c7de292bc6f5c7dd2d9a2541e9a77d36d050d1fdaf63ab1b3e50d8813265",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 41,
+    "nodes": 5342,
+    "raw_directed_edges": 6093,
+    "structure_sha256": "db051c44b1322aa8a4e6d2c145288cb7dc99bff3f6bec6e485395a9dfb580e3a",
+    "neighbor_scores_sha256": "4cd5d87cf3519b40fcf929b4cdb29fe8f9c3ed9c27f7a9b6f4e6668352da67ee",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 42,
+    "nodes": 7140,
+    "raw_directed_edges": 8493,
+    "structure_sha256": "5de53262342e90bdc7c93c72a8370823c7e1e356b7b9063c33610669915fd80d",
+    "neighbor_scores_sha256": "783ce79f348ab95145523dff03c52b192b675c13db31dde31d48b868ada3e88b",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 43,
+    "nodes": 5063,
+    "raw_directed_edges": 5950,
+    "structure_sha256": "3543d535ca82541b82aa07ad0750f2f5cf2ff1f4b094d89563e0f4e185c4c65e",
+    "neighbor_scores_sha256": "fdcc123ca0b9f856ac921c4299b93c5c9b197bceeebb56865c354eabaadfb831",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 44,
+    "nodes": 4975,
+    "raw_directed_edges": 5551,
+    "structure_sha256": "0c50111b065ef7d42d0d53c98f2954f58d5ef0898448d1b96929a9f95f882123",
+    "neighbor_scores_sha256": "8752e94f0c357425bc777a4e80234f74daac51257c17dce3ba8dab6fcbaf2e37",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 45,
+    "nodes": 5598,
+    "raw_directed_edges": 6673,
+    "structure_sha256": "b915516726d45e1d87c95a7857f8027e8cf5a6f248bc82953bd7e4949b145b08",
+    "neighbor_scores_sha256": "7dac008fd02c0df386a38eee17161423121cea4800e59baa86a256548cec3073",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 46,
+    "nodes": 3519,
+    "raw_directed_edges": 3866,
+    "structure_sha256": "a25fe272f5fa852e9ba9ba375dacc61a3441ac486d45aa11f96d52b70ed634c9",
+    "neighbor_scores_sha256": "807cc39c0daaed7fba05f9972b920006b66b04dc86fbd54902e7848172ad8c6d",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 47,
+    "nodes": 5121,
+    "raw_directed_edges": 5748,
+    "structure_sha256": "3cd36f53556f8729e8d1777ff68da2e925a73719c655173afc54073b7dfca5a2",
+    "neighbor_scores_sha256": "9b1139d55d553c452a5e63d5a5479197a4fd3778c1ce6d696dff4562a903f56b",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 48,
+    "nodes": 2954,
+    "raw_directed_edges": 3284,
+    "structure_sha256": "05688b917024119110b2e2866de2fe1fdf38cf776231cd3970c795389f15cfb4",
+    "neighbor_scores_sha256": "18c1c0b94a1306616068a2a13d2342e05468dd70be0d02b5a12f79d958916dcf",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  },
+  {
+    "time_step": 49,
+    "nodes": 2454,
+    "raw_directed_edges": 2587,
+    "structure_sha256": "3030aefd4b52512ed75162a8d343f3987038629d691275861f6c3d69a55ea0fa",
+    "neighbor_scores_sha256": "0858579593c1f0a95962909ef81fd8df0c77b9ae54bf985d2778b79409935e2b",
+    "helper_fit_end_step": 24,
+    "current_or_future_labels_used": false
+  }
+]
