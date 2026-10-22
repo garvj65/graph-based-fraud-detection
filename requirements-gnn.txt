@@ -1,4 +1,5 @@
-# Optional PyG data-loading route. Stage 4 will validate a pinned training stack.
+# Stage 4 training stack. For CPU, install the CPU Torch wheel first:
+# python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
 -r requirements.txt
-torch>=2.4,<3
-torch-geometric>=2.6,<3
+torch==2.8.0
+torch-geometric==2.6.1

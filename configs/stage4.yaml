@@ -1,0 +1,49 @@
+project: elliptic-fraud
+stage: 4
+data:
+  raw_dir: data/elliptic/raw
+  require_full_dataset: true
+split:
+  train: [1, 24]
+  validation: [25, 34]
+  test: [35, 49]
+experiment:
+  seeds: [0, 1, 2, 3, 4]
+  tuning_seed: 0
+  representative_seed: 0
+  models: [gcn, graphsage]
+  feature_groups: [local, all, structure_only]
+  include_time: true
+  primary_feature_group: all
+  primary_metric: average_precision
+  threshold_objective: max_f1
+  threshold_tie_break: highest_threshold
+  graph_availability: completed_snapshot
+  evaluate_test: false
+  run_no_message_control: true
+  baseline_summary: results/stage2/validation_primary.csv
+  graph_summary: results/stage3/validation_summary.csv
+graph:
+  direction: bidirectional_unique
+  max_time_step: 34
+  # Used only for the six-feature structure-only ablation, matching Stage 3.
+  pagerank_alpha: 0.85
+  pagerank_tolerance: 0.0000000001
+  pagerank_max_iter: 1000
+  clustering: undirected_projection
+training:
+  max_epochs: 250
+  patience: 30
+  min_delta: 0.0
+  gradient_clip_norm: 5.0
+  weight_decay: 0.0005
+  # Two predeclared candidates, per architecture and feature group; no test tuning.
+  candidates:
+    - {hidden_channels: 64, dropout: 0.3, learning_rate: 0.01}
+    - {hidden_channels: 64, dropout: 0.5, learning_rate: 0.003}
+runtime:
+  device: cpu
+  thread_limit: 4
+  deterministic_algorithms: true
+output_dir: results/stage4
+artifact_dir: artifacts/stage4

@@ -337,26 +337,48 @@ def run_experiment(
 
 
 def main() -> None:
-    """CLI for one model/seed or the complete predeclared Stage 2 experiment."""
+    """CLI for tabular experiments, or dispatch an explicit GNN to Stage 4."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", type=Path, default=Path("configs/stage2.yaml"))
-    parser.add_argument("--model", choices=("all", "logreg", "xgboost"), default="all")
+    parser.add_argument("--config", type=Path)
+    parser.add_argument(
+        "--model", choices=("all", "logreg", "xgboost", "gcn", "graphsage"), default="all"
+    )
     parser.add_argument("--seed", type=int)
     parser.add_argument("--raw-dir", type=Path)
     parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--artifact-dir", type=Path)
+    parser.add_argument("--device", choices=("cpu", "cuda"))
     parser.add_argument("--download", action="store_true")
     args = parser.parse_args()
-    config = yaml.safe_load(args.config.read_text(encoding="utf-8"))
+    is_gnn = args.model in {"gcn", "graphsage"}
+    config_path = args.config or Path("configs/stage4.yaml" if is_gnn else "configs/stage2.yaml")
+    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     if args.raw_dir:
         config["data"]["raw_dir"] = str(args.raw_dir)
     if args.output_dir:
         config["output_dir"] = str(args.output_dir)
-    batch = run_experiment(
-        config,
-        models=None if args.model == "all" else [args.model],
-        seeds=None if args.seed is None else [args.seed],
-        download=args.download,
-    )
+    if args.artifact_dir:
+        config["artifact_dir"] = str(args.artifact_dir)
+    if is_gnn:
+        from src.gnn_train import run_gnn_experiment
+
+        config["experiment"]["models"] = [args.model]
+        if args.seed is not None:
+            config["experiment"].update(
+                seeds=[args.seed], tuning_seed=args.seed, representative_seed=args.seed
+            )
+        if args.device:
+            config["runtime"]["device"] = args.device
+        batch = run_gnn_experiment(config, download=args.download)
+    else:
+        if args.device:
+            parser.error("--device is for GNNs; tabular runs use their configured CPU runtime.")
+        batch = run_experiment(
+            config,
+            models=None if args.model == "all" else [args.model],
+            seeds=None if args.seed is None else [args.seed],
+            download=args.download,
+        )
     print(
         json.dumps(
             {"batch_id": batch["batch_id"], "status": batch["status"], "report": batch["report"]},

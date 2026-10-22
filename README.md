@@ -3,7 +3,7 @@
 **Question:** Do additional graph features and small GNNs improve on a strong
 tabular baseline, and does the model remain reliable over time?
 
-**Status: Stages 1–3 complete; paused before Stage 4 (GNNs).**
+**Status: Stages 1–3 complete; Stage 4 GNN experiment in progress.**
 The dataset, temporal splits, weighted tabular baselines and additional graph
 features have real five-seed validation results. Final test evaluation and
 over-time monitoring remain future review stages.
@@ -11,7 +11,7 @@ over-time monitoring remain future review stages.
 This is an offline benchmark for an Associate Data Scientist portfolio. It is
 not a real-time fraud service or a claim of deployment experience.
 
-## Reproduce stages 1–3
+## Reproduce stages 1–4
 
 Python 3.10+; the completed run used Python 3.12.14. No GPU is required.
 From the repository root:
@@ -83,6 +83,35 @@ All models, feature arrays and exact score arrays live under ignored
 CSV, tables and plots retain the experiment evidence. Reproduction regenerates
 the binary artifacts. Test graph rows remain unavailable (NaN) during this stage.
 
+For Stage 4, install the CPU Torch wheel and PyG, then run the complete GNN
+experiment, tests and independent checkpoint/metric validation:
+
+```bash
+python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+python -m pip install -r requirements-gnn.txt
+make stage4
+# Individual architecture / seed:
+python -m src.train --model gcn --seed 0 --output-dir results/stage4_gcn_seed0
+```
+
+The default uses two-layer GCN and GraphSAGE models on local, all and six
+structure-only inputs. A no-message control for each architecture reuses the
+selected all-feature parameters. Two predeclared candidates are compared on
+seed 0 per architecture/input group; winners are frozen for seeds 0–4. The
+complete run requires 46 unique fits and produces 40 selected seed results.
+The default CPU run uses four Torch threads, 64 hidden channels, at most 250
+epochs and validation-AP early stopping with patience 30. Scores, thresholds,
+best epochs and every effective config are logged. Detailed choices and
+leakage controls are in [the Stage 4 protocol](docs/stage4_protocol.md).
+
+Weights, scalers and full validation scores are regenerated under ignored
+`artifacts/`. Run logs, epoch histories, representative scores, tables and plots
+are committed. `scripts/validate_stage4.py` reloads checkpoints and independently
+recomputes AP and thresholds without scoring test data. A single-seed run has
+unavailable std. CUDA is an optional separately configured experiment; the
+completed benchmark uses CPU. `requirements-stage4-tested.txt` records direct
+observed versions, not a transitive lock or cross-platform identity guarantee.
+
 The raw feature CSV is about 690 MB; allow space for raw files, temporary ZIPs
 and parsing memory. Raw data is excluded from version control.
 The CSV layout is the same as the original Kaggle release. Kaggle downloads can
@@ -99,8 +128,8 @@ python -m pip install -r requirements-gnn.txt
 python -m src.data --source pyg
 ```
 
-PyG acquisition was not exercised in the current environment (Torch/PyG are not
-installed); the completed full-data run and tests use raw CSV loading. PyG's
+PyG dataset acquisition was not exercised; full-data loading uses the audited
+raw CSV route. Stage 4 exercises PyG's GCN and GraphSAGE training layers. PyG's
 processed feature matrix omits time, and its default training mask uses steps
 1–34. This project ignores those masks, recovers time from the raw CSV and joins
 labels by transaction ID, rather than trusting CSV row-order alignment.
@@ -129,7 +158,7 @@ used as a replacement decision threshold.
 | XGBoost | local | 94 | 5 | 0.9829 ± 0.0005 | 0.9611 ± 0.0169 | 0.9176 ± 0.0176 | 0.9386 ± 0.0013 |
 
 Validation selects both candidates and thresholds, so these development scores
-are optimistic. Test performance stays unevaluated until Stage 5. Additional graph features are compared in Stage 3 below; no GNN has been trained yet.
+are optimistic. Test performance stays unevaluated until Stage 5. Additional graph features are compared in Stage 3 below; GNN results are reported separately in Stage 4.
 
 ![Validation PR and threshold diagnostics](results/stage2/figures/validation_diagnostics.png)
 
@@ -152,7 +181,7 @@ scores, metrics and thresholds exactly for all five seeds.
 | XGBoost + structure + neighbor scores | 174 | 0.98532 ± 0.00137 | 0.95118 ± 0.00512 |
 | XGBoost structure only | 6 | 0.25526 ± 0.00205 | 0.38044 ± 0.00380 |
 
-Structure adds a small validation AP difference of +0.000647 ± 0.000596 across paired seeds (4/5 positive). The combined structure/neighbor-score variant differs from control by -0.000028 ± 0.000682 (2/5 positive). The simple neighbor scores add no validation gain in this experiment. The GNN and final test comparisons remain pending.
+Structure adds a small validation AP difference of +0.000647 ± 0.000596 across paired seeds (4/5 positive). The combined structure/neighbor-score variant differs from control by -0.000028 ± 0.000682 (2/5 positive). The simple neighbor scores add no validation gain in this experiment. The final test comparison remains pending; Stage 4 adds the GNN experiment.
 
 ![Graph feature comparison and paired validation AP differences](results/stage3/figures/graph_comparison.png)
 
@@ -244,7 +273,7 @@ independent preprocessing or split implementation.
 | Labels silently attached to the wrong transactions | Join by ID; reject duplicate/missing IDs, invalid classes and missing edge endpoints. |
 | Unknown interpreted as licit | Use `-1` and separate graph/supervision masks; test every split. |
 | Future nodes affect training messages or normalization | Training graph is induced on steps 1–24; snapshot API exposes one time step only. Unknown future nodes are excluded from training too. |
-| Neighbor-label leakage | Helper exposes train labels only; validation/test labels are replaced by unknown. Training label aggregates will still require cross-fitting or a defensible label-availability protocol in stage 3. |
+| Neighbor-label leakage | Helper exposes train labels only; validation/test labels are replaced by unknown. Stage 3 uses forward-chained model scores rather than raw neighbor labels; Stage 4 never uses labels as features. |
 | Label-derived features fail outside training | There are no cross-time edges. The audit finds zero evaluation edges touching train-labeled nodes. A train-label-only neighbor feature has no labeled neighbors in validation/test; do not claim useful holdout coverage. |
 | Supplied aggregates use forward neighbors | These are retrospective one-hop aggregates. Completed-snapshot versus transaction-arrival availability must be agreed before modeling. The anonymized release cannot certify strict as-of feature availability or reconstruct precise arrival order. |
 | Preprocessing fitted on validation/test | None is fitted in stage 1. Later scalers, class weights, feature selection and drift reference/bin edges must use training data only. |
@@ -253,7 +282,7 @@ independent preprocessing or split implementation.
 
 PageRank, clustering and other structural values on a new observed snapshot
 are inference-time computations, not permission to estimate a global graph
-using future steps. Stage 3 must document this distinction for every feature.
+using future steps. Stages 3 and 4 document this distinction for graph features and message normalization.
 
 ## Evidence and reproducibility
 
@@ -287,11 +316,11 @@ synthetic fixtures; dataset findings use only the downloaded real release.
 
 1. **Data + splits + tests:** reviewed and validated; timestamp precision guard fixed.
 2. **Baselines:** complete; weighted LogReg/XGBoost, local/all and time ablations,
-   five-seed validation results and frozen thresholds. Paused for review.
+   five-seed validation results and frozen thresholds. Reviewed.
 3. **Graph features:** complete; NetworkX structure, forward-chained neighbor
-   scores, paired five-seed comparisons and structure-only ablation. Paused for review.
-4. **GNNs:** small GCN then GraphSAGE; weighted supervised loss, training-period
-   message passing, validation early stopping, five seeds.
+   scores, paired five-seed comparisons and structure-only ablation. Reviewed.
+4. **GNNs:** in progress; small GCN and GraphSAGE, weighted supervised loss,
+   training-period message passing, validation early stopping, five seeds.
 5. **Evaluation:** fixed validation-selected thresholds; AP primary, trapezoidal
    PR-AUC separate; precision/recall/F1, confusion matrix, top-k and secondary ROC-AUC;
    mean ± sample std, paired seed differences and feature/structure ablations.
@@ -301,7 +330,7 @@ synthetic fixtures; dataset findings use only the downloaded real release.
    decay. Propose triggers with training/validation justification and label-delay
    assumptions. Emit plots, JSON/CSV and five final interview findings.
 
-Stages 4–6 are not implemented in this checkpoint. Final test and monitoring
+Stages 5–6 are not implemented in this checkpoint. Final test and monitoring
 claims will be added only after their actual runs. Explainability,
 communities, semi-supervised experiments and a dashboard follow the core
 comparison if time permits.
@@ -311,6 +340,8 @@ comparison if time permits.
 `configs/default.yaml` preserves the historical Stage 1 checkpoint, which had no
 modeling policy. `configs/stage2.yaml` contains the baseline protocol; `configs/stage3.yaml`
 preserves its split/metrics and fixes the additional graph experiment.
+`configs/stage4.yaml` preserves the same split, AP definition, time-feature
+convention and validation-max-F1 threshold policy for the GNN comparison.
 After the choice form returned no selections, Stage 2 used explicit defaults:
 
 - Primary inputs: 94 local / 166 all features, including time; 93/165 run as an
