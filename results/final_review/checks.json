@@ -1,0 +1,22 @@
+{
+  "review_base_commit": "9960e2aa3b813203d8ec21eac99101824c3174d1",
+  "unit_tests_passed": 127,
+  "whole_repository_ruff": "passed",
+  "monitoring_audit": "passed",
+  "historical_source_and_result_files_checked": 398,
+  "historical_source_and_result_bytes_unchanged": true,
+  "readme_sha256": "395e65b32e9e56b48235b558005c736b2f602333bb4b3aba7a18d59b4922a865",
+  "readme_changed": false,
+  "test_results_or_thresholds_reselected": false,
+  "strict_old_stage5_replay_in_current_runtime": "failed_on_gnn_float32_differences",
+  "portability_check": {
+    "models_reloaded": 100,
+    "bitwise_identical_models": 60,
+    "maximum_absolute_score_difference": 2.086162567138672e-06,
+    "maximum_absolute_ap_difference": 1.0852788806525737e-06,
+    "changed_threshold_predictions_all_nodes": 0,
+    "changed_ordered_top100_step_queues": 2,
+    "changed_top100_membership_steps": 0,
+    "changed_known_illicit_alert_count_steps": 0
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "batch_id": "20261022T172524Z_c30b28ed",
+  "status": "passed",
+  "candidate_models_reloaded": 5,
+  "frozen_evaluation_score_archives_verified": 35,
+  "per_step_quality_rows_independently_checked": 525,
+  "score_and_feature_drift_rows_independently_checked": 735,
+  "train_only_reference_and_training_gain_ranking_verified": true,
+  "training_inputs_match_original_fit_fingerprints": true,
+  "unknown_denominators_and_undefined_metrics_verified": true,
+  "rolling_counts_support_floors_and_warnings_verified": true,
+  "event_periods_and_seed_means_sample_std_verified": true,
+  "original_stage5_thresholds_and_evidence_unchanged": true,
+  "models_retrained": false,
+  "prospective_detection_or_causality_claimed": false,
+  "stage5_batch_id": "20261022T091411Z_1dd24bdd"
+}

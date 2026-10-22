@@ -1,0 +1,43 @@
+project: elliptic-fraud
+stage: 6
+data:
+  raw_dir: data/elliptic/raw
+  require_full_dataset: true
+split:
+  train: [1, 24]
+  validation: [25, 34]
+  test: [35, 49]
+references:
+  stage5_manifest: results/stage5/latest_run.json
+experiment:
+  seeds: [0, 1, 2, 3, 4]
+  representative_seed: 0
+  primary_metric: average_precision
+  candidate_selection: reuse_stage5_validation_selected_variant
+  fit_models_or_preprocessors: false
+  reselect_decision_thresholds: false
+  protocol_status: explicit_defaults_after_unanswered_choice_form
+drift:
+  population: all_nodes_including_unknown
+  reference_steps: [1, 24]
+  quantile_bins: 10
+  probability_floor: 0.000001
+  top_features: 10
+  feature_selection: representative_model_training_gain
+  psi_warning: 0.2
+  consecutive_steps: 2
+performance:
+  rolling_steps: 3
+  minimum_known_labels: 100
+  minimum_illicit_labels: 20
+  f1_floor_fraction_of_validation: 0.8
+  incomplete_window_warning: false
+investigation:
+  literature_event_step: 43
+  periods:
+    before_event: [35, 42]
+    event_and_after: [43, 49]
+runtime:
+  thread_limit: 4
+output_dir: results/stage6
+artifact_dir: artifacts/stage6

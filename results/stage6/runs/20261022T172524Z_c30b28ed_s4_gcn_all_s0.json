@@ -1,0 +1,123 @@
+{
+  "batch_id": "20261022T172524Z_c30b28ed",
+  "stage": 6,
+  "status": "completed",
+  "config": {
+    "project": "elliptic-fraud",
+    "stage": 6,
+    "data": {
+      "raw_dir": "data/elliptic/raw",
+      "require_full_dataset": true
+    },
+    "split": {
+      "train": [
+        1,
+        24
+      ],
+      "validation": [
+        25,
+        34
+      ],
+      "test": [
+        35,
+        49
+      ]
+    },
+    "references": {
+      "stage5_manifest": "results/stage5/latest_run.json"
+    },
+    "experiment": {
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "representative_seed": 0,
+      "primary_metric": "average_precision",
+      "candidate_selection": "reuse_stage5_validation_selected_variant",
+      "fit_models_or_preprocessors": false,
+      "reselect_decision_thresholds": false,
+      "protocol_status": "explicit_defaults_after_unanswered_choice_form"
+    },
+    "drift": {
+      "population": "all_nodes_including_unknown",
+      "reference_steps": [
+        1,
+        24
+      ],
+      "quantile_bins": 10,
+      "probability_floor": 1e-06,
+      "top_features": 10,
+      "feature_selection": "representative_model_training_gain",
+      "psi_warning": 0.2,
+      "consecutive_steps": 2
+    },
+    "performance": {
+      "rolling_steps": 3,
+      "minimum_known_labels": 100,
+      "minimum_illicit_labels": 20,
+      "f1_floor_fraction_of_validation": 0.8,
+      "incomplete_window_warning": false
+    },
+    "investigation": {
+      "literature_event_step": 43,
+      "periods": {
+        "before_event": [
+          35,
+          42
+        ],
+        "event_and_after": [
+          43,
+          49
+        ]
+      }
+    },
+    "runtime": {
+      "thread_limit": 4
+    },
+    "output_dir": "results/stage6",
+    "artifact_dir": "artifacts/stage6"
+  },
+  "variant": "s4_gcn_all",
+  "seed": 0,
+  "threshold": 0.49980422854423523,
+  "source_evaluation_record": {
+    "path": "results/stage5/runs/20261022T091411Z_1dd24bdd_s4_gcn_all_s0.json",
+    "sha256": "191a18c5887f2d773a1f5130563f982c2f8404ec44b7c1d33b317bb6b8264aee"
+  },
+  "protocol": {
+    "path": "results/stage6/protocols/20261022T172524Z_c30b28ed.json",
+    "sha256": "40cdffe71389d2490fb54465a40f0ea268f55a870274f15261d8927128ccf491"
+  },
+  "test_metrics": {
+    "average_precision": 0.35283837113302996,
+    "pr_auc_trapezoid": 0.352097890685702,
+    "precision": 0.4847277556440903,
+    "recall": 0.33702677746999077,
+    "f1": 0.39760348583877997,
+    "roc_auc": 0.8413320438149532,
+    "confusion_matrix": [
+      [
+        15199,
+        388
+      ],
+      [
+        718,
+        365
+      ]
+    ],
+    "support_labeled": 16670,
+    "support_illicit": 1083,
+    "support_licit": 15587,
+    "observed_illicit_rate_labeled": 0.06496700659868027,
+    "alert_count_labeled": 753,
+    "alert_rate_labeled": 0.04517096580683863,
+    "mean_score_labeled": 0.05314341075140334,
+    "threshold": 0.49980422854423523
+  },
+  "test_scores_reused": true,
+  "models_or_preprocessors_fitted": false,
+  "decision_threshold_changed": false
+}

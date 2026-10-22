@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "/workspace/scratch/372d84f913fe/elliptic-fraud/scripts/validate_stage5.py", line 92, in validate
+    np.testing.assert_array_equal(saved["score"], actual)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1054, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 919, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+
+Mismatched elements: 29230 / 67504 (43.3%)
+Max absolute difference among violations: 5.96046448e-07
+Max relative difference among violations: 1.52635585e-05
+ ACTUAL: array([0.620565, 0.678748, 0.65307 , ..., 0.006371, 0.042821, 0.222494],
+      shape=(67504,))
+ DESIRED: array([0.620565, 0.678748, 0.65307 , ..., 0.006371, 0.042821, 0.222494],
+      shape=(67504,))

@@ -1,4 +1,4 @@
-.PHONY: stage1 stage2 stage3 stage4 stage5 test
+.PHONY: stage1 stage2 stage3 stage4 stage5 stage6 test
 
 stage1:
 	python -m pytest -q
@@ -28,3 +28,9 @@ stage5:
 	python -m src.final_evaluate --config configs/stage5.yaml
 	python scripts/validate_stage5.py
 	python scripts/summarize_stage5.py
+
+stage6:
+	python -m pytest -q
+	python -m src.monitor --config configs/stage6.yaml
+	python scripts/validate_stage6.py
+	python scripts/summarize_stage6.py

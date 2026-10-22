@@ -1,0 +1,18 @@
+{
+  "batch_id": "20261022T172524Z_c30b28ed",
+  "source": {
+    "path": "/workspace/scratch/372d84f913fe/elliptic-fraud/scripts/summarize_stage6.py",
+    "sha256": "031225f39cd1fbc8ada242d99934c0661292e14e6c1ac6902503d672e9f6e914"
+  },
+  "training_correlations_use_steps": [
+    1,
+    24
+  ],
+  "heldout_feature_ranking_used": false,
+  "diagnostics_changed_models_or_policies": false,
+  "features_with_abs_training_time_correlation_at_least_0_95": [
+    "aggregate_007",
+    "aggregate_043",
+    "aggregate_010"
+  ]
+}
