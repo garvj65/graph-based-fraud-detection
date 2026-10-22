@@ -1,4 +1,4 @@
-.PHONY: stage1 stage2 stage3 stage4 test
+.PHONY: stage1 stage2 stage3 stage4 stage5 test
 
 stage1:
 	python -m pytest -q
@@ -21,3 +21,9 @@ stage4:
 	python -m src.gnn_train --config configs/stage4.yaml --download
 	python scripts/validate_stage4.py
 	python scripts/summarize_stage4.py
+
+stage5:
+	python -c "import torch, torch_geometric"
+	python -m pytest -q
+	python -m src.final_evaluate --config configs/stage5.yaml
+	python scripts/validate_stage5.py

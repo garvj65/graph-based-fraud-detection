@@ -1,0 +1,489 @@
+"""Stage 5: freeze reviewed models/policies, replay validation, then evaluate future test."""
+
+from __future__ import annotations
+
+import argparse
+import copy
+import json
+import time
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import pandas as pd
+import yaml
+
+from src.atomic_artifacts import write_json, write_npz
+from src.data import (
+    RAW_FILES,
+    TemporalSplit,
+    environment_versions,
+    load_csv,
+    sha256_file,
+)
+from src.evaluate import binary_metrics
+from src.evaluation_metrics import alert_counts, budget_metrics, select_recall_threshold
+from src.inference import (
+    Observations,
+    SnapshotFeatureCache,
+    load_score_helper,
+    predict_frozen,
+    verify_artifact,
+)
+
+CRITICAL_SOURCES = (
+    "data.py",
+    "evaluate.py",
+    "models.py",
+    "features.py",
+    "gnn.py",
+    "train.py",
+    "inference.py",
+    "evaluation_metrics.py",
+    "final_evaluate.py",
+)
+
+
+def variant_name(record: dict[str, Any]) -> str:
+    """Stable identifiers distinguish historical stages and time-input ablations."""
+    suffix = ""
+    if record["stage"] == 2:
+        suffix = "_time" if record["include_time"] else "_no_time"
+    return f"s{record['stage']}_{record['model']}_{record['feature_group']}{suffix}"
+
+
+def validate_final_config(config: dict[str, Any]) -> None:
+    """Require the reviewed split, frozen thresholds, and an explicit budget policy."""
+    if config.get("stage") != 5:
+        raise ValueError("This entry point implements Stage 5 only.")
+    TemporalSplit(**{name: tuple(bounds) for name, bounds in config["split"].items()})
+    experiment = config["experiment"]
+    if experiment["fit_models_or_preprocessors"] is not False:
+        raise ValueError("Stage 5 cannot fit any model or preprocessor.")
+    if experiment["evaluate_test"] is not True:
+        raise ValueError("Stage 5 is the explicitly enabled final test evaluation.")
+    if (
+        experiment["primary_metric"],
+        experiment["graph_availability"],
+        experiment["threshold_policy"],
+        experiment["selection_rule"],
+    ) != (
+        "average_precision",
+        "completed_snapshot",
+        "reuse_each_saved_validation_max_f1_threshold",
+        "highest_mean_validation_ap_among_primary_variants",
+    ):
+        raise ValueError("Preserve the reviewed AP, availability and frozen selection policies.")
+    seeds = experiment["seeds"]
+    if (
+        not seeds
+        or len(set(seeds)) != len(seeds)
+        or any(isinstance(seed, bool) or not isinstance(seed, int) or seed < 0 for seed in seeds)
+    ):
+        raise ValueError("Seeds must be unique nonnegative integers.")
+    if experiment["representative_seed"] not in seeds:
+        raise ValueError("Representative seed must be predeclared and evaluated.")
+    primary = experiment["primary_variants"]
+    if not primary or len(set(primary)) != len(primary):
+        raise ValueError("Primary variants must be explicit and unique.")
+    targets = experiment["recall_targets"]
+    if (
+        not targets
+        or len(set(targets)) != len(targets)
+        or any(not np.isfinite(value) or not 0 < value <= 1 for value in targets)
+    ):
+        raise ValueError("Diagnostic recall targets must lie in (0, 1].")
+    budget = config["alert_budget"]
+    k = budget["per_time_step"]
+    if isinstance(k, bool) or not isinstance(k, int) or k < 1:
+        raise ValueError("An explicit positive integer alert budget is required before test.")
+    if not budget["views"] or len(set(budget["views"])) != len(budget["views"]):
+        raise ValueError("Budget views must be explicit and unique.")
+    if not set(budget["views"]) <= {"labeled_only", "all_transactions"}:
+        raise ValueError("Unknown budget denominator.")
+    if budget["tie_break"] != "transaction_id_lexicographic":
+        raise ValueError("Budget ties must not be resolved using labels.")
+    if budget["threshold_and_budget_are_separate_policies"] is not True:
+        raise ValueError("Fixed-k queues and frozen F1 thresholds are separate policies.")
+    if config["runtime"]["device"] != "cpu" or config["runtime"]["thread_limit"] < 1:
+        raise ValueError("Use the declared CPU inference runtime.")
+    if not 0 <= config["runtime"]["validation_score_atol"] <= 1e-10:
+        raise ValueError("Validation replay must use a strict, declared numerical tolerance.")
+
+
+def source_records(config: dict[str, Any]) -> list[tuple[Path, dict[str, Any]]]:
+    """Load each selected historical fit; reject changed seeds or duplicated variants."""
+    result = []
+    for name in ("stage2", "stage3", "stage4"):
+        if name not in config["references"]:
+            continue
+        manifest_path = Path(config["references"][name])
+        manifest = json.loads(manifest_path.read_text())
+        if manifest["status"] != "completed" or manifest["test_evaluated"] is not False:
+            raise ValueError("Only completed, pre-test development manifests may be referenced.")
+        for run_id in manifest["selected_runs"]:
+            path = manifest_path.parent / "runs" / f"{run_id}.json"
+            run = json.loads(path.read_text())
+            if run["seed"] not in config["experiment"]["seeds"]:
+                continue
+            if run["status"] != "completed" or run["test_evaluated"] is not False:
+                raise ValueError("A referenced development fit is incomplete or test-informed.")
+            if run["threshold"]["selection_split"] != "validation":
+                raise ValueError("Every primary cutoff must come from validation.")
+            for key in ["model"] if run["stage"] < 4 else ["checkpoint", "scaler"]:
+                verify_artifact(run["artifacts"][key])
+            verify_artifact(run["artifacts"]["validation_predictions"])
+            result.append((path, run))
+    groups: dict[str, list[int]] = {}
+    for _, run in result:
+        groups.setdefault(variant_name(run), []).append(run["seed"])
+    for variant, seeds in groups.items():
+        if sorted(seeds) != sorted(config["experiment"]["seeds"]):
+            raise ValueError(f"Variant {variant} lacks the exact distinct declared seeds.")
+    if not set(config["experiment"]["primary_variants"]) <= groups.keys():
+        raise ValueError("A declared primary variant is absent from the frozen development fits.")
+    return result
+
+
+def make_cache(data: Any, config: dict[str, Any]) -> SnapshotFeatureCache:
+    """Load the frozen training-only helper; no validation/test labels enter inputs."""
+    path = config["references"].get("score_helper_log")
+    if not path and "stage3" in config["references"]:
+        manifest_path = Path(config["references"]["stage3"])
+        batch = json.loads(manifest_path.read_text())
+        path = manifest_path.parent / "helper_fit_logs" / f"{batch['batch_id']}_prefix_24.json"
+    helper = load_score_helper(json.loads(Path(path).read_text())) if path else None
+    return SnapshotFeatureCache(
+        Observations.from_data(data),
+        config["graph"],
+        helper,
+        thread_limit=config["runtime"]["thread_limit"],
+    )
+
+
+def freeze_protocol(
+    config: dict[str, Any],
+    *,
+    batch_id: str,
+    data: Any,
+    cache: SnapshotFeatureCache,
+) -> tuple[dict[str, Any], Path]:
+    """Replay validation and freeze every policy before the first test prediction."""
+    references = source_records(config)
+    raw_dir = Path(config["data"]["raw_dir"])
+    input_hashes = {name: sha256_file(raw_dir / name) for name in RAW_FILES}
+    observations = cache.observed
+    primary = config["experiment"]["primary_variants"]
+    plan: dict[str, Any] = {
+        "batch_id": batch_id,
+        "stage": 5,
+        "status": "preparing_validation_only",
+        "config": config,
+        "versions": environment_versions(),
+        "references": [],
+        "test_scored_before_freeze": False,
+        "models_or_preprocessors_fitted": False,
+        "input_files_sha256": input_hashes,
+        "critical_source_sha256": {
+            name: sha256_file(Path("src") / name) for name in CRITICAL_SOURCES
+        },
+        "reference_manifest_sha256": {
+            key: {"path": value, "sha256": sha256_file(Path(value))}
+            for key, value in config["references"].items()
+            if value
+        },
+    }
+    for path, run in references:
+        if run["provenance"]["input_files_sha256"] != input_hashes:
+            raise ValueError("Frozen model and current dataset hashes differ.")
+        nodes, scores, audit = predict_frozen(
+            observations,
+            (25, 34),
+            run,
+            cache,
+            thread_limit=config["runtime"]["thread_limit"],
+        )
+        with np.load(run["artifacts"]["validation_predictions"]["path"]) as saved:
+            positions = pd.Index(observations.tx_ids[nodes]).get_indexer(saved["tx_id"])
+            if (positions < 0).any():
+                raise ValueError("Validation score IDs do not align with frozen evidence.")
+            if not np.array_equal(data.y[nodes][positions], saved["label"]):
+                raise ValueError("Validation labels differ from the original development run.")
+            difference = np.abs(scores[positions] - saved["score"])
+            max_error = float(difference.max()) if len(difference) else 0.0
+            if not np.allclose(
+                scores[positions],
+                saved["score"],
+                rtol=0,
+                atol=config["runtime"]["validation_score_atol"],
+            ):
+                raise ValueError(f"Validation replay changed for {run['run_id']}: {max_error}")
+            bitwise = bool(np.array_equal(scores[positions], saved["score"]))
+        threshold = run["threshold"]["value"]
+        validation = binary_metrics(data.y[nodes], scores, threshold=threshold)
+        variant = variant_name(run)
+        entry = {
+            "source_record": {"path": str(path), "sha256": sha256_file(path)},
+            "source_run_id": run["run_id"],
+            "variant": variant,
+            "seed": run["seed"],
+            "primary": variant in primary,
+            "frozen_threshold": threshold,
+            "validation_ap_for_model_selection": run["validation_metrics"]["average_precision"],
+            "validation_replay": {
+                "max_absolute_score_error": max_error,
+                "bitwise_identical": bitwise,
+                "input_audit": audit,
+                "frozen_confusion_matches_original": validation["confusion_matrix"]
+                == run["validation_metrics"]["confusion_matrix"],
+                "metrics": validation,
+            },
+            "recall_policies": [],
+        }
+        if entry["primary"]:
+            for target in config["experiment"]["recall_targets"]:
+                policy = select_recall_threshold(data.y[nodes], scores, target_recall=target)
+                policy["validation_metrics"] = binary_metrics(
+                    data.y[nodes],
+                    scores,
+                    threshold=policy["threshold"],
+                )
+                policy["validation_workload"] = alert_counts(
+                    data.y[nodes], scores, policy["threshold"]
+                )
+                entry["recall_policies"].append(policy)
+        artifact = Path(config["artifact_dir"]) / batch_id / run["run_id"]
+        artifact.mkdir(parents=True, exist_ok=True)
+        score_path = artifact / "validation_predictions.npz"
+        write_npz(
+            score_path,
+            tx_id=observations.tx_ids[nodes],
+            time_step=observations.time_step[nodes],
+            label=data.y[nodes],
+            score=scores,
+        )
+        entry["validation_predictions"] = {
+            "path": str(score_path),
+            "sha256": sha256_file(score_path),
+        }
+        plan["references"].append(entry)
+    means = {
+        variant: float(
+            np.mean(
+                [
+                    entry["validation_ap_for_model_selection"]
+                    for entry in plan["references"]
+                    if entry["variant"] == variant
+                ]
+            )
+        )
+        for variant in primary
+    }
+    winner = max(primary, key=lambda variant: means[variant])
+    plan["validation_selected_variant"] = winner
+    plan["primary_validation_ap_means"] = means
+    plan["validation_snapshot_audit"] = list(cache.audit.values())
+    if any(row["time_step"] >= 35 for row in plan["validation_snapshot_audit"]):
+        raise ValueError("Test structure was computed before policy freeze.")
+    plan.update(status="frozen_before_test", frozen_at=datetime.now(timezone.utc).isoformat())
+    plan_path = Path(config["output_dir"]) / "protocols" / f"{batch_id}.json"
+    write_json(plan_path, plan)
+    write_json(Path(config["output_dir"]) / "frozen_protocol.json", plan)
+    print(
+        json.dumps(
+            {
+                "protocol_frozen": str(plan_path),
+                "models": len(references),
+                "validation_selected_variant": winner,
+            }
+        ),
+        flush=True,
+    )
+    return plan, plan_path
+
+
+def evaluate_frozen_entry(
+    entry: dict[str, Any],
+    *,
+    plan: dict[str, Any],
+    plan_path: Path,
+    plan_hash: str,
+    data: Any,
+    cache: SnapshotFeatureCache,
+) -> dict[str, Any]:
+    """Score test once, using only a previously persisted frozen protocol."""
+    if plan["status"] != "frozen_before_test" or sha256_file(plan_path) != plan_hash:
+        raise ValueError("Test scoring requires an unchanged, persisted frozen protocol.")
+    path = verify_artifact(entry["source_record"])
+    source = json.loads(path.read_text())
+    if source["threshold"]["value"] != entry["frozen_threshold"]:
+        raise ValueError("The saved validation threshold changed after freezing.")
+    config, observations = plan["config"], cache.observed
+    run_id = f"{plan['batch_id']}_{entry['variant']}_s{entry['seed']}"
+    log_path = Path(config["output_dir"]) / "runs" / f"{run_id}.json"
+    record: dict[str, Any] = {
+        "run_id": run_id,
+        "batch_id": plan["batch_id"],
+        "stage": 5,
+        "status": "running",
+        "variant": entry["variant"],
+        "primary": entry["primary"],
+        "model": source["model"],
+        "feature_group": source["feature_group"],
+        "include_time": source["include_time"],
+        "n_features": source["n_features"],
+        "seed": source["seed"],
+        "source_run_id": source["run_id"],
+        "source_record": entry["source_record"],
+        "frozen_threshold": entry["frozen_threshold"],
+        "protocol": {"path": str(plan_path), "sha256": plan_hash},
+        "models_or_preprocessors_fitted": False,
+        "threshold_reselected_on_test": False,
+    }
+    write_json(log_path, record)
+    started = time.perf_counter()
+    try:
+        nodes, scores, audit = predict_frozen(
+            observations,
+            (35, 49),
+            source,
+            cache,
+            thread_limit=config["runtime"]["thread_limit"],
+        )
+        labels, ids, times = (
+            data.y[nodes],
+            observations.tx_ids[nodes],
+            observations.time_step[nodes],
+        )
+        metrics = binary_metrics(labels, scores, threshold=entry["frozen_threshold"])
+        budgets = []
+        for step in range(35, 50):
+            current = times == step
+            for view in config["alert_budget"]["views"]:
+                budget, _ = budget_metrics(
+                    labels[current],
+                    scores[current],
+                    ids[current],
+                    k=config["alert_budget"]["per_time_step"],
+                    view=view,
+                )
+                budgets.append({"time_step": step, **budget})
+        recall_policies = []
+        for policy in entry["recall_policies"]:
+            recall_policies.append(
+                {
+                    **policy,
+                    "test_metrics": binary_metrics(labels, scores, threshold=policy["threshold"]),
+                    "test_workload": alert_counts(labels, scores, policy["threshold"]),
+                }
+            )
+        artifact = Path(config["artifact_dir"]) / plan["batch_id"] / source["run_id"]
+        score_path = artifact / "test_predictions.npz"
+        write_npz(score_path, tx_id=ids, time_step=times, label=labels, score=scores)
+        record.update(
+            status="completed",
+            elapsed_seconds=time.perf_counter() - started,
+            inference_audit=audit,
+            test_metrics=metrics,
+            frozen_threshold_workload=alert_counts(labels, scores, entry["frozen_threshold"]),
+            per_step_budget_metrics=budgets,
+            recall_policies=recall_policies,
+            test_predictions={"path": str(score_path), "sha256": sha256_file(score_path)},
+        )
+        write_json(log_path, record)
+        print(
+            json.dumps(
+                {
+                    "run_id": run_id,
+                    "average_precision": metrics["average_precision"],
+                    "f1": metrics["f1"],
+                    "threshold": entry["frozen_threshold"],
+                }
+            ),
+            flush=True,
+        )
+        return record
+    except Exception as error:
+        record.update(status="failed", error={"type": type(error).__name__, "message": str(error)})
+        write_json(log_path, record)
+        raise
+
+
+def run_final_evaluation(config: dict[str, Any], *, freeze_only: bool = False) -> dict[str, Any]:
+    """Freeze before unblinding; evaluate all declared models, never selecting on test."""
+    config = copy.deepcopy(config)
+    batch_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "_" + uuid.uuid4().hex[:8]
+    output = Path(config["output_dir"])
+    batch_path = output / "batches" / f"{batch_id}.json"
+    batch: dict[str, Any] = {
+        "batch_id": batch_id,
+        "stage": 5,
+        "status": "running",
+        "config": config,
+        "evaluation_runs": [],
+        "models_or_preprocessors_fitted": False,
+    }
+    write_json(batch_path, batch)
+    try:
+        validate_final_config(config)
+        data = load_csv(
+            Path(config["data"]["raw_dir"]),
+            require_full_dataset=config["data"]["require_full_dataset"],
+        )
+        cache = make_cache(data, config)
+        plan, plan_path = freeze_protocol(config, batch_id=batch_id, data=data, cache=cache)
+        plan_hash = sha256_file(plan_path)
+        batch["protocol"] = {"path": str(plan_path), "sha256": plan_hash}
+        write_json(batch_path, batch)
+        if freeze_only:
+            batch["status"] = "frozen_without_test_evaluation"
+            write_json(batch_path, batch)
+            return batch
+        completed = []
+        for entry in plan["references"]:
+            run = evaluate_frozen_entry(
+                entry, plan=plan, plan_path=plan_path, plan_hash=plan_hash, data=data, cache=cache
+            )
+            completed.append(run)
+            batch["evaluation_runs"].append(run["run_id"])
+            write_json(batch_path, batch)
+        from src.final_reporting import build_final_report
+
+        report = build_final_report(completed, plan, output)
+        write_json(
+            output / "snapshot_feature_audit.json",
+            sorted(cache.audit.values(), key=lambda row: row["time_step"]),
+        )
+        if sha256_file(plan_path) != plan_hash:
+            raise ValueError("Frozen protocol changed during test evaluation.")
+        for name, digest in plan["critical_source_sha256"].items():
+            if sha256_file(Path("src") / name) != digest:
+                raise ValueError(f"Critical evaluation code changed during execution: {name}")
+        batch.update(
+            status="completed",
+            test_evaluated=True,
+            report=report,
+            reporting_source_sha256=sha256_file(Path("src/final_reporting.py")),
+        )
+        write_json(batch_path, batch)
+        write_json(output / "latest_run.json", batch)
+        return batch
+    except Exception as error:
+        batch.update(status="failed", error={"type": type(error).__name__, "message": str(error)})
+        write_json(batch_path, batch)
+        raise
+
+
+def main() -> None:
+    """CLI: python -m src.final_evaluate --config configs/stage5.yaml."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--config", type=Path, default=Path("configs/stage5.yaml"))
+    parser.add_argument("--freeze-only", action="store_true")
+    args = parser.parse_args()
+    run_final_evaluation(yaml.safe_load(args.config.read_text()), freeze_only=args.freeze_only)
+
+
+if __name__ == "__main__":
+    main()

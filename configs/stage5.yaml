@@ -1,0 +1,50 @@
+project: elliptic-fraud
+stage: 5
+data:
+  raw_dir: data/elliptic/raw
+  require_full_dataset: true
+split:
+  train: [1, 24]
+  validation: [25, 34]
+  test: [35, 49]
+experiment:
+  seeds: [0, 1, 2, 3, 4]
+  representative_seed: 0
+  primary_metric: average_precision
+  graph_availability: completed_snapshot
+  threshold_policy: reuse_each_saved_validation_max_f1_threshold
+  evaluate_test: true
+  fit_models_or_preprocessors: false
+  selection_rule: highest_mean_validation_ap_among_primary_variants
+  recall_targets: [0.5, 0.8, 0.9]
+  protocol_status: explicit_defaults_after_unanswered_choice_form
+  primary_variants:
+    - s2_logreg_all_time
+    - s2_xgboost_local_time
+    - s2_xgboost_all_time
+    - s3_xgboost_all_structure
+    - s3_xgboost_all_graph
+    - s4_gcn_all
+    - s4_graphsage_all
+alert_budget:
+  per_time_step: 100
+  views: [labeled_only, all_transactions]
+  tie_break: transaction_id_lexicographic
+  threshold_and_budget_are_separate_policies: true
+graph:
+  pagerank_alpha: 0.85
+  pagerank_tolerance: 0.0000000001
+  pagerank_max_iter: 1000
+  clustering: undirected_projection
+  no_neighbor_score: 0.0
+references:
+  stage2: results/stage2/latest_run.json
+  stage3: results/stage3/latest_run.json
+  stage4: results/stage4/latest_run.json
+  score_helper_log: null  # Resolve prefix 24 from the referenced Stage 3 batch.
+runtime:
+  device: cpu
+  thread_limit: 4
+  validation_score_atol: 0.000000000001
+output_dir: results/stage5
+artifact_dir: artifacts/stage5
