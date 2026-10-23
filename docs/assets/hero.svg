@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="390"
+  viewBox="0 0 1200 390" role="img" aria-labelledby="title desc">
+<title id="title">Graph fraud detection: strong scores, fragile detection</title>
+<desc id="desc">The selected model reaches test AP 0.7837,
+but misses 95.4% of known illicit transactions in steps 43 to 49.
+Five training seeds, with a fixed temporal split. The graph motif is decorative.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+    <stop stop-color="#0e1e2a"/><stop offset="1" stop-color="#132f38"/>
+  </linearGradient>
+  <radialGradient id="glow"><stop stop-color="#48ddbd" stop-opacity=".16"/>
+    <stop offset="1" stop-color="#48ddbd" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1200" height="390" rx="18" fill="url(#bg)"/>
+<circle cx="1010" cy="135" r="220" fill="url(#glow)"/>
+<g fill="none" stroke="#61d4c0" stroke-opacity=".22" stroke-width="1.4">
+  <path d="M840 72L929 43L1000 97L1092 62L1148 138L1069 205L966 174L879 211L840 72"/>
+  <path d="M840 72L1000 97L966 174L929 43M1000 97L1069 205L1092 62M879 211L1000 97L1148 138"/>
+</g>
+<g fill="#8ce5d2">
+  <circle cx="840" cy="72" r="4"/><circle cx="929" cy="43" r="5"/>
+  <circle cx="1000" cy="97" r="7"/><circle cx="1092" cy="62" r="4"/>
+  <circle cx="1148" cy="138" r="5"/><circle cx="1069" cy="205" r="4"/>
+  <circle cx="966" cy="174" r="5"/><circle cx="879" cy="211" r="4"/>
+</g>
+<g font-family="DejaVu Sans,Arial,sans-serif">
+  <text x="48" y="48" fill="#8da9b7" font-size="14" letter-spacing="3">
+    ELLIPTIC / GRAPH FRAUD BENCHMARK</text>
+  <text x="46" y="122" fill="#f0f7fa" font-size="61" font-weight="700">
+    Strong scores.</text>
+  <text x="46" y="190" fill="#7be4cb" font-size="61" font-weight="700">
+    Fragile detection.</text>
+  <text x="49" y="229" fill="#b4c9d2" font-size="20">
+    Tabular models. Graph learning. Temporal reliability.</text>
+  <path d="M48 266H1152" stroke="#3b5965" stroke-opacity=".7"/>
+  <text x="49" y="321" fill="#f0f7fa" font-size="38" font-weight="700">
+    0.784</text>
+  <text x="50" y="351" fill="#94b0bd" font-size="12" letter-spacing="1.1">
+    WHOLE-PERIOD TEST AP</text>
+  <text x="415" y="321" fill="#f6b879" font-size="38" font-weight="700">
+    95.4%</text>
+  <text x="416" y="351" fill="#94b0bd" font-size="12" letter-spacing=".7">
+    KNOWN ILLICIT MISSED / STEPS 43–49</text>
+  <text x="872" y="321" fill="#f0f7fa" font-size="38" font-weight="700">
+    5 seeds</text>
+  <text x="873" y="351" fill="#94b0bd" font-size="12" letter-spacing="1.1">
+    FIXED TEMPORAL SPLIT</text>
+</g>
+</svg>

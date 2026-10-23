@@ -1,0 +1,13 @@
+{
+  "candidate": "s3_xgboost_all_structure",
+  "test_ap_mean": 0.783743098297569,
+  "post_event_known_illicit_missed_fraction": 0.9538461538461539,
+  "seeds": 5,
+  "sources": {
+    "results/stage5/test_comparison.csv": "a5091e1da7311fe85aea30b1992a7f309a8c2c7756c2eb01cbb75eb3342c0dbc",
+    "results/stage6/regime_summary.csv": "38dc53c1ac2cdf067da0363986f7bdb4d6afaed9995680dce8a620f480b6bc82",
+    "results/stage6/per_step_summary.csv": "23afab6533df554fa798f2fde1984dde56b46ec18636231f502712f3e5f92f7c"
+  },
+  "models_fitted": false,
+  "metrics_or_thresholds_changed": false
+}

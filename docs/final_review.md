@@ -1,5 +1,9 @@
 # Final technical and code review
 
+> Historical implementation-review checkpoint, before the subsequent README and
+> About refresh. Presentation was deferred at this point; the current project
+> overview is the [README](../README.md). The experiment evidence is unchanged.
+
 The required data, baseline, graph-feature, GNN, test-evaluation and monitoring
 work is complete. README/About presentation remains deliberately deferred.
 This review compares the implementation with the original project requirements,
