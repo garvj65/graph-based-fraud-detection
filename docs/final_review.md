@@ -115,7 +115,7 @@ promotion or causal event detection is claimed.
 With prior artifacts available, run `make stage6` for tests, monitoring, its
 independent audit and generated findings. A fresh checkout must reproduce prior
 training/evaluation stages first. Direct tested versions are recorded in
-`requirements-stage6-tested.txt`; these are not a transitive environment lock.
+`docs/environments/requirements-stage6-tested.txt`; these are not a transitive environment lock.
 For the descriptive original-artifact portability check, run
 `python scripts/audit_replay_portability.py`. Its output is explicitly distinct
 from the original strict Stage 5 audit.

@@ -1,4 +1,4 @@
-# Stage 4 training stack. For CPU, install the CPU Torch wheel first:
+# GNN training and inference stack. For CPU, install the CPU Torch wheel first:
 # python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
 -r requirements.txt
 torch==2.8.0

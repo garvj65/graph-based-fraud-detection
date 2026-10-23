@@ -1,4 +1,5 @@
-# Stages 1–3. CPU-only XGBoost package avoids downloading GPU runtime libraries.
+# Core data, tabular and graph-feature stack. Use requirements-gnn.txt for GNNs.
+# CPU-only XGBoost package avoids downloading GPU runtime libraries.
 numpy>=1.26,<3
 pandas>=2.2,<3
 PyYAML>=6.0,<7

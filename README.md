@@ -121,6 +121,7 @@ There is **no random split or train+validation refit**. Scalers and imbalance we
 - [Frozen-model evaluation protocol](docs/stage5_protocol.md) and [independent audit](results/stage5/independent_validation.json)
 - [Monitoring protocol](docs/stage6_protocol.md) and [independent audit](results/stage6/independent_validation.json)
 - [Final technical/code review](docs/final_review.md), [numerical replay evidence](results/final_review/numerical_replay.json), and [five interview findings](docs/project_findings.md)
+- [Recorded environment versions](docs/environments/README.md) and [earlier development notes](docs/history/README.md)
 
 Run records retain configs, seeds, dependency versions, artifact/input hashes, and metrics. Historical recovery and interrupted-run evidence are preserved. Five-seed standard deviation describes fitting variation on this dataset, not uncertainty across future time periods. Logistic Regression is deterministic, so its repeated seeds add no independent variation.
 

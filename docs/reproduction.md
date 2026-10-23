@@ -40,12 +40,16 @@ For the recorded direct versions on a compatible Python 3.12/Linux CPU setup,
 install the CPU Torch wheel first, then use:
 
 ```bash
-python -m pip install -r requirements-stage6-tested.txt
+python -m pip install -r docs/environments/requirements-stage6-tested.txt
 ```
 
 This records direct observed versions, not a transitive environment lock or a
 cross-hardware bitwise guarantee. Requirements with version ranges support a
 wider Python/platform matrix; a new environment can produce a new experiment.
+
+Earlier observed versions are preserved in the [environment archive](environments/README.md).
+Earlier findings and review notes live in [development history](history/README.md);
+their statements describe the checkpoint at which they were written.
 
 ## Run the full experiment serially
 

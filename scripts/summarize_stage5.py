@@ -96,7 +96,9 @@ def main() -> None:
         "The next task is to locate that deterioration "
         "with per-step metrics and drift checks, rather than assume a particular event caused it.",
     ]
-    Path("docs/stage5_findings.md").write_text(
+    history = Path("docs/history")
+    history.mkdir(parents=True, exist_ok=True)
+    (history / "stage5_findings.md").write_text(
         "# Stage 5 interview findings\n\n"
         + "\n".join(f"- “{finding}”" for finding in findings)
         + "\n",

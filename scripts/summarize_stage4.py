@@ -1,4 +1,4 @@
-"""Render measured Stage 4 conclusions and README/interview findings from run evidence."""
+"""Render measured Stage 4 conclusions and historical findings from run evidence."""
 
 from __future__ import annotations
 
@@ -10,8 +10,6 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from src.gnn_reporting import gnn_markdown_table  # noqa: E402
 
 START, END = "<!-- stage4-measured-start -->", "<!-- stage4-measured-end -->"
 
@@ -26,7 +24,7 @@ def replace_block(text: str, block: str) -> str:
 
 
 def main() -> None:
-    """Use only completed logs and validation CSVs; no dataset access or training."""
+    """Use completed validation evidence; preserve the current project README."""
     output = Path("results/stage4")
     batch = json.loads((output / "latest_run.json").read_text())
     assert batch["status"] == "completed" and batch["test_evaluated"] is False
@@ -108,45 +106,6 @@ def main() -> None:
         "one seed has unavailable std.", "single-seed invocations have unavailable std."
     )
     report_path.write_text(replace_block(report_text, measured), encoding="utf-8")
-    readme_path = Path("README.md")
-    readme = readme_path.read_text()
-    readme = readme.replace(
-        "The dataset, temporal splits, weighted tabular baselines and additional graph\n"
-        "features have real five-seed validation results.",
-        "The audited temporal splits, weighted tabular baselines, additional graph\n"
-        "features and GNNs have real five-seed validation results.",
-    )
-    readme = readme.replace(
-        "**Status: Stages 1–3 complete; Stage 4 GNN experiment in progress.**",
-        "**Status: Stages 1–4 complete; paused before Stage 5 (final test evaluation).**",
-    )
-    readme = readme.replace(
-        "4. **GNNs:** in progress; small GCN and GraphSAGE, weighted supervised loss,\n"
-        "   training-period message passing, validation early stopping, five seeds.",
-        "4. **GNNs:** complete; GCN and GraphSAGE, five seeds, feature/message ablations,\n"
-        "   validation-AP early stopping and independently validated checkpoints. "
-        "Paused for review.",
-    )
-    block = (
-        f"{START}\n## Current comparison — validation only\n\n"
-        "Known labels, steps 25–34; mean ± sample std over five seeds. AP means "
-        "average precision. Each run's maximum-F1 validation threshold is frozen for test.\n\n"
-        + gnn_markdown_table(comparison)
-        + f"\n{conclusion} Full results include local/all/structure-only and no-message "
-        "ablations. Seed std describes fitting variation, not future-period uncertainty.\n\n"
-        "![GNN feature and message ablations](results/stage4/figures/gnn_comparison.png)\n\n"
-        "![Representative GNN learning curves](results/stage4/figures/learning_curves.png)\n\n"
-        "See [the Stage 4 report](results/stage4/REPORT.md), "
-        "[checkpoint and metric validation](results/stage4/independent_validation.json), "
-        "[epoch-budget audit](results/stage4/budget_audit.csv), and "
-        "[five interview findings](docs/stage4_findings.md). "
-        "Test results and monitoring remain Stages 5 and 6.\n" + END
-    )
-    if START in readme:
-        readme = replace_block(readme, block)
-    else:
-        readme = readme.replace("## Reproduce stages 1–4", block + "\n\n## Reproduce stages 1–4")
-    readme_path.write_text(readme, encoding="utf-8")
     sage_delta = paired.loc[paired.model == "graphsage", "ap_delta_message_minus_no_message"]
     findings = [
         "I compared two-layer GCN and GraphSAGE against the same temporal tabular benchmark, "
@@ -168,7 +127,9 @@ def main() -> None:
         "confusion counts. Validation was reused for development, so the future-period "
         "comparison and any claim about deterioration after step 43 still need their own runs.",
     ]
-    Path("docs/stage4_findings.md").write_text(
+    history = Path("docs/history")
+    history.mkdir(parents=True, exist_ok=True)
+    (history / "stage4_findings.md").write_text(
         "# Stage 4 findings — interview explanation\n\n"
         "Validation only; final test and monitoring remain unevaluated.\n\n"
         + "\n".join(f"- “{line}”" for line in findings)

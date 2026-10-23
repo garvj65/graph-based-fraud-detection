@@ -140,7 +140,9 @@ the monitored top ten remain those chosen by training-tree gain.
     base_report = base_report.replace("| event_and_after |", "| Steps 43–49 |")
     report.write_text(base_report + "\n\n" + marker + section)
     docs.mkdir(parents=True, exist_ok=True)
-    (docs / "stage6_findings.md").write_text(
+    history = docs / "history"
+    history.mkdir(parents=True, exist_ok=True)
+    (history / "stage6_findings.md").write_text(
         "# Monitoring interview findings\n\n"
         + "\n".join(
             [
